@@ -88,12 +88,21 @@
         align-items: center;
     }
 
-    .l_div{
-        flex-direction: column;
-    }
+
     .input_l{
         flex-direction: column;
+        margin: 0;
+        padding: 0;
     }
+
+    .input_R input{
+        margin-bottom: .5rem;
+    }
+
+    .input_l input {
+        margin-bottom: .5rem;
+    }
+
     
     .input_l textarea {
         margin-bottom: 1%;
@@ -118,5 +127,15 @@
         text-align: left;
         max-width: 80%;
         padding-left: 5%;
+        
+     }
+
+     .R_div{
+        margin-bottom: 5%;
+        margin-top: 5%;
+     }
+
+     .contacts_main h1 {
+        margin-bottom: 5%;
      }
 }
