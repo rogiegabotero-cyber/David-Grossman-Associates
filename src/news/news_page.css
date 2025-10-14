@@ -1,6 +1,13 @@
 .news_page{
     color: black;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.news_page2{
+    color: black;
+    display: flex;
     flex-direction: row;
     justify-content: center;
     gap: 5%;

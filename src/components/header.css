@@ -2,7 +2,6 @@
 
 
 .whole_header {
-    position: fixed;  /* ensures it stays on top of content */
     top: 0;
     left: 0;
     right: 0;
@@ -275,7 +274,6 @@ border: 1px solid #EF4524;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        padding: 0.5rem 1rem;
         height: 4rem;
         z-index: 1200; /* lower than burger */
     }
@@ -294,7 +292,6 @@ border: 1px solid #EF4524;
         flex-direction: column;
         align-items: center;
         gap: 1.2rem;
-        padding: 1rem 0;
         display: none; 
         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         z-index: 1000;

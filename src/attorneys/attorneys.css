@@ -50,3 +50,19 @@
     align-items: center;
     gap: 8%;
 }
+
+.news_page{
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .about_pp{
+        flex-direction: column;
+        max-width: 98%;
+        padding-top: 10%;
+    }
+
+    .profile_details img{
+        max-width: 98%;
+    }
+}
