@@ -1,0 +1,29 @@
+HTML{
+  height: 100vh;
+  background-color:#ffffff;
+}
+
+*{
+  font-family: "Playfair Display";
+}
+
+button{
+    margin-top: .7rem;
+    margin-bottom: .7rem;
+    font-size: 18px;
+    border: 1px #EF4524 solid;
+    background-color: #EF4524;
+    border-radius: 0px 0px 0px 0px;
+    color: white;
+    padding: 12px 12px 12px 12px;
+    font-weight: 600;
+    font-family: "Playfair Display";
+}
+
+button:hover {
+    color: #d34916;
+    background-color: #ffffff;
+    border: #d34916 1px solid;
+    cursor: pointer;
+}
+

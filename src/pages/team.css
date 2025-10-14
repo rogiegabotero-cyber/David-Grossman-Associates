@@ -1,0 +1,25 @@
+.profile_div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: black;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    background-color: #d9d9d9;
+}
+
+.profile_div img{
+    max-width: 25%;
+}
+
+.profile_div strong{
+    padding-top: 20px;
+}
+
+.profile_div p{
+    margin: 0;
+}
+
+.profile_div h1 {
+    margin-bottom: 2%;
+}

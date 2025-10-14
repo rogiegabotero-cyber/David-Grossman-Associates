@@ -1,0 +1,52 @@
+.main_didiv {
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 6% 12% 12% 12%;
+}
+
+.about_pp {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile_details{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.details_profile {
+    text-align: left;
+    font-size: 18px;
+}
+
+.details_profile p strong {
+    font-size: 18px;
+    color: black;
+}
+
+.details_profile strong, .profile_details strong {
+    font-size: 2rem;
+    color: #EF4524;
+}
+
+.profile_details img {
+    border-style: solid;
+    border-width: 2px 2px 2px 2px;
+    border-color: #EF4524;
+    max-width: 24rem;
+}
+
+.about_pp {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8%;
+}

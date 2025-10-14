@@ -1,0 +1,130 @@
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Sans-serif;
+  color: white;
+  text-align: center;
+}
+
+#main {
+  width: 100%;
+  padding-top: 12%;
+  height: 50vh;
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  background-size: 110%;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: background-image 1.5s ease-in-out, background-size 5s ease-in-out;
+  animation: zoomEffect 10s ease-in-out infinite;
+}
+
+@keyframes zoomEffect {
+  0% {
+    background-size: 110%;
+  }
+  50% {
+    background-size: 120%;
+  }
+  100% {
+    background-size: 110%;
+  }
+}
+
+#main::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 0;
+}
+
+h1, h2, button, .slider-arrows {
+  position: relative;
+  z-index: 1;
+}
+
+.contactus123 {
+  background-color: #1e90ff; 
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  font-size: 20px;
+  cursor: pointer;
+  border: #1e90ff 1px solid;
+  transition: background-color 0.3s ease;
+}
+
+.contactus123:hover {
+  background-color: #4682b4; 
+  border: #ffffff 1px solid;
+}
+
+#main button {
+  background-color: #00000000;
+  font-family: "Playfair Display", Sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  border: none;
+  border-radius: 0;
+  padding: 9px 24px;
+  border: none;
+  cursor: pointer;
+}
+
+
+#main a {
+  position: relative;
+  z-index: 2; 
+    background-color: #EF4524;
+    font-family: "Playfair Display", Sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    border-width: 0px;
+    border-radius: 0px;
+    padding: .5rem .5rem .8rem .5rem;
+}
+
+#main a:hover {
+    background-color: #ef462400;
+    border: solid 1px #ffffff;
+    color: #ffffff;
+}
+
+#main a button:hover {
+    color: white;
+}
+
+.slider-arrows {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  padding: 0 20px;
+}
+
+.arrow {
+  background: rgba(0, 0, 0, 0.4);
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.arrow:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+h1 {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+h2 {
+  margin: 0;
+}

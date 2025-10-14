@@ -1,0 +1,124 @@
+.footer_div{
+    background-color: #000000;
+    width: 100%;
+}
+
+.footer_div2{
+    background-color: #000000;
+    width: 100%;
+    margin: 0;
+    border-top: solid 1px white;
+}
+
+.top-div {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    justify-content: center;
+    padding-top: 3%;
+    padding-bottom: 2%;
+    border-bottom: solid 1px white;
+}
+
+.inf_r {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+}
+
+.inf_r label {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.inf_r button{
+    margin: 5px;
+    padding: 10px 25px;
+}
+
+.inf_r input,
+.inf_r textarea {
+    width: 400px;       
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box; 
+}
+
+.inf_r label {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 5px;
+    color: white;
+}
+
+.bot_div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 2% 6% 1% 6%;
+    gap: 4rem;
+}
+
+.first, .second {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    text-align: left;
+    width: 12rem;
+    gap: 1rem;
+}
+
+
+.first h1{
+    font-size: 1rem;
+    padding-left: 10px;
+}
+
+.logo_div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+}
+
+.logo_div img{
+    width: 3rem;
+    height: 3rem;
+    object-fit: cover;
+}
+
+.icon_div1 {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.icon_div1 a {
+    color: white;
+    font-size: 2rem;
+}
+
+.second a {
+    text-decoration: none;
+    color: white;
+}
+
+.rights {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    margin: 0;
+}
+
+.rights p {
+    border-top: solid white 1px;
+    width: 80%;
+    padding-top: 1rem;
+}
