@@ -68,7 +68,7 @@ h1, h2, button, .slider-arrows {
   font-weight: 500;
   border: none;
   border-radius: 0;
-  padding: 9px 24px;
+  padding: 9px 7px ;
   border: none;
   cursor: pointer;
 }
@@ -94,6 +94,10 @@ h1, h2, button, .slider-arrows {
 
 #main a button:hover {
     color: white;
+}
+
+.arrow_right{
+  margin-right: 2.5rem;
 }
 
 .slider-arrows {
@@ -127,4 +131,32 @@ h1 {
 
 h2 {
   margin: 0;
+}
+
+
+@media (max-width: 768px) {
+  @keyframes zoomEffect {
+  0% {
+    background-size: 200%;
+  }
+  50% {
+    background-size: 250%;
+  }
+  100% {
+    background-size: 200%;
+  }
+}
+
+#main h1 {
+  margin: 0;
+  font-size: 1rem;
+  padding-top: 30%;
+}
+
+#main h2 {
+  margin: 0;
+  font-size: .5rem;
+}
+
+
 }

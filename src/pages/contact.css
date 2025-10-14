@@ -1,6 +1,8 @@
 .contacts_main {
     color: rgb(255, 255, 255);
     margin: 2%;
+    display: flex;
+    flex-direction: column;
 
     padding-top: 2%;
     width: 100%;
@@ -23,6 +25,8 @@
     flex-direction: row;
     justify-content: center;
     gap: 5%;
+    width: 100%;
+    font-size: 18px;
 }
 
 .l_div {
@@ -44,12 +48,13 @@
     justify-content: center;
     gap: 1%;
     margin-bottom: 1%;
+    width: 100%;
 }
 
 .input_R {
     display: flex;
     flex-direction: column;
-    width: 101%;
+    width: 100%;
 }
 .input_R input {
     margin-bottom: 1%;
@@ -57,7 +62,6 @@
 
 .input_R textarea {
     background-color: white;
-    width: 100%;
     max-width: 97%;
 }
 
@@ -75,4 +79,44 @@
 
 .icons1 i{
     padding-right: 10px;
+}
+
+@media (max-width: 768px){
+    .details{
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .l_div{
+        flex-direction: column;
+    }
+    .input_l{
+        flex-direction: column;
+    }
+    
+    .input_l textarea {
+        margin-bottom: 1%;
+        
+    }
+
+     .input_R textarea{
+        max-width: 95%;
+     }
+
+
+     .icons1 p{
+        width: 100%;
+        padding: 0;
+        margin: 0;
+     }
+
+     .R_div div{
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+        text-align: left;
+        max-width: 80%;
+        padding-left: 5%;
+     }
 }

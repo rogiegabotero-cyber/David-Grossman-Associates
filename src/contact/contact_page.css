@@ -149,3 +149,14 @@
     align-items: center;
     font-size: 14px;
 }
+
+@media (max-width: 768px) {
+    .details2{
+        flex-direction: column;
+    }
+
+    .icons12{
+        text-align: left;
+        margin-left: 5%;
+    }
+}

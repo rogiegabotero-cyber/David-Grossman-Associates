@@ -1,12 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 
-.whole_header{
+.whole_header {
+    position: fixed;  /* ensures it stays on top of content */
     top: 0;
     left: 0;
     right: 0;
+    width: 100%;
     box-shadow: 0 2px 2px rgba(0,0,0,0.2);
-    z-index: 15000;
+    background-color: #fff;
+    z-index: 1000; /* base layer */
 }
 
 .top_header{
@@ -94,7 +97,7 @@
     background-color: #ffffff;
     color: #EF4524;
     font-weight: bold;
-    padding-right: 6.07%;
+    padding-right: 6.07%;;
 }
 
 .main_header .links{
@@ -147,7 +150,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2000;
+  z-index: 60000;
   backdrop-filter: blur(2px); 
   color: black;
   text-align: left;
@@ -161,11 +164,13 @@
     background-color: #ededed;
     padding: 3rem;
     border-radius: 20px;
+    z-index: 7000;
 }
 
 .popup-form form{
     display: flex;
     flex-direction: column;
+    
 }
 
 .popup-form form input, 
@@ -182,6 +187,7 @@
     padding-right: 0.5rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 0.5rem;
+    
 }
 
 .form-buttons {
@@ -217,19 +223,17 @@ background-color: #ffffff;
 border: 1px solid #EF4524;
 }
 
-.burger {
-  display: none;
-  font-size: 2rem;
-  color: #EF4524;
-  cursor: pointer;
-  margin-right: 1rem;
-}
-
 #free_consultationBtn {
     margin-left: 1.5rem;
     border: solid 1px #EF4524;
 }
+
+.burger {
+    display: none;
+}
+
 @media (max-width: 768px) {
+    
     header{
         display: flex;
         flex-direction: column;
@@ -245,19 +249,40 @@ border: 1px solid #EF4524;
         align-items: start;
     }
 
+    .contact-info p {
+        padding: 0;
+        margin: 5px;
+        font-size: inherit;
+    }
+
     .top_header{
-        align-items: center;
+        display: flex;
+        flex-direction: row; 
+        height: auto;
+        margin: 0;
+        padding-left: 0;
+    }
+
+    .social-icons {
+        margin: 0;
+        gap: 0;
+        flex-direction: column;
+        font-size: 1rem;
     }
 
     .main_header {
+        position: relative;
         flex-direction: row;
         justify-content: space-between;
+        align-items: center;
         padding: 0.5rem 1rem;
         height: 4rem;
+        z-index: 1200; /* lower than burger */
     }
 
     .burger {
         display: block;
+        z-index: 4000;
     }
 
     .main_header .links {
@@ -289,4 +314,9 @@ border: 1px solid #EF4524;
     .links a, #free_consultationBtn {
         font-size: 1rem;
     }
+
+    .burger {
+        display: block; /* show burger on mobile */
+    }
+
 }

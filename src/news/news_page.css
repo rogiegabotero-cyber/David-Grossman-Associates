@@ -48,3 +48,13 @@
     justify-content: space-between;
     
 }
+
+@media (max-width: 768px){
+    .news_page{
+        flex-direction: column;
+    }
+
+    .container8{
+        margin-bottom: 5%;
+    }
+}

@@ -36,3 +36,21 @@
     object-fit: cover;
     border-radius: 1rem;
 }
+
+@media (max-width: 768px){
+    .practice_div div{
+        flex-direction: column;
+    }
+    
+    .sample_div img {
+          max-width: 20rem;
+    }
+
+    .sample_div {
+        margin: 0;
+    }
+
+    .sample_div p{
+        width: 200%;
+    }
+}

@@ -25,6 +25,7 @@
     flex-direction: column;
     justify-content: start;
     align-items: start;
+    margin: 0;
 }
 
 .inf_r label {
@@ -40,7 +41,6 @@
 
 .inf_r input,
 .inf_r textarea {
-    width: 400px;       
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -121,4 +121,46 @@
     border-top: solid white 1px;
     width: 80%;
     padding-top: 1rem;
+}
+
+@media (max-width: 768px){
+    .footer_div div{
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+    }
+
+    .footer_div{
+        padding-top: 5%;
+    }
+
+    .footer_div2 {
+        flex-direction: column;
+        text-align: left;
+    }
+
+    .footer_div2 div {
+        flex-direction: column;
+        margin-left: 5%;
+    }
+    .rights{
+        margin: 0;
+    }
+
+    .bot_div div{
+        margin-left: 10%;
+    }
+
+    .logo_div{
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+    }
+
+    .logo_div h1 {
+        width: 100%;
+    }
+   
 }
