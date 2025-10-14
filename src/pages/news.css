@@ -49,3 +49,16 @@
     margin: 1.5rem 0rem 1rem 0rem;
     padding: .5rem 1rem .5rem 1rem;
 }
+
+@media (max-width: 768px) {
+    .content_div {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .content_div div{
+        margin-bottom: 20%;
+    }
+
+}
