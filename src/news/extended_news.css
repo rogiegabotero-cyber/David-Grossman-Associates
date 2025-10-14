@@ -35,3 +35,14 @@
 .footer33 button {
     background-color: black;
 }
+
+@media (max-width: 768px){
+
+    .maindiv_athens{
+        padding-top: 10%;
+    }
+
+    .orange_h2{
+        max-width: 80%;
+    }
+}
