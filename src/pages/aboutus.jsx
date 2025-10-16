@@ -20,7 +20,7 @@ const aboutus = () => {
                 nation and advocates for victims of corporate greed who
                 caused all sorts of harms to the environment, unions and
             </p>
-            <Link to="/about_section"><button>Read more <i className="bi bi-arrow-right"></i></button></Link>
+            <Link to="/about_section"><button>About us </button></Link>
             
         </div>
         <div className='right_div'>

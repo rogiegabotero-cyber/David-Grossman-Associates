@@ -17,6 +17,10 @@
     color: white;
     background-color: #EF4524;
     border: #EF4524 1px solid;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    font-weight: 400;
+    font-size: 20px;
 }
 
 .left_div button:hover {

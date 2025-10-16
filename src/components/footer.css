@@ -76,8 +76,9 @@
 
 
 .first h1{
-    font-size: 1rem;
+    font-size: 1.2rem;
     padding-left: 10px;
+    color: #EF4524;
 }
 
 .logo_div{
@@ -153,6 +154,11 @@
 
     .logo_div h1{
         padding-left: 0px;
+        color: #EF4524;
+    }
+
+    .icon_div1{
+        flex-direction: row;
     }
 
 }

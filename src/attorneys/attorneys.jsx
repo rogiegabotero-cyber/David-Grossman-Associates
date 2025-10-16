@@ -6,7 +6,6 @@ import David from '../assets/dg_profile.webp';
 
 const Attorneys = () => {
 
-  // Correct way to scroll to top on page load
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -14,7 +13,7 @@ const Attorneys = () => {
   return (
     <div >
       <div className="orange">
-        <h2>Contact Us</h2>
+        <h2>Attorneys</h2>
         <div className="back_link">
           <Link to="/" className="back-home">
             <House strokeWidth={1} size={20} /> Attorneys

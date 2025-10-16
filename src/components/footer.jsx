@@ -10,7 +10,6 @@ const footer = () => {
         <div className='bot_div'>
             <div className='first'>
                 <div className='logo_div'>
-                    <img src={Icon} alt="" />
                     <h1>David Grossman <br />& Associates</h1>
                 </div>
                 <p>
@@ -43,10 +42,10 @@ const footer = () => {
                 <Link id='link2' to="/practice_area#sample2">
                     Antitrust: Generic Drug Price Fixing
                 </Link>
-                <Link id='link3' to="/practice_area#sample3">
+                <Link id='link3' to="/practice_area#sample4">
                     Social Media Harm 
                 </Link>
-                <Link id='link4' to="/practice_area#sample4">
+                <Link id='link4' to="/practice_area#sample3">
                     Environmental Case: PFAS 
                 </Link>
                 

@@ -18,7 +18,21 @@ body {
   background-repeat: no-repeat;
   transition: background-image 1.5s ease-in-out, background-size 5s ease-in-out;
   animation: zoomEffect 10s ease-in-out infinite;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
 }
+
+.slide {
+  position: absolute;
+  inset: 0;
+  background-size: 110%;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: zoomEffect 10s ease-in-out infinite; /* ✅ apply zoom here */
+  transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+  z-index: 0;
+}
+
 
 @keyframes zoomEffect {
   0% {
@@ -40,9 +54,9 @@ body {
   z-index: 0;
 }
 
-h1, h2, button, .slider-arrows {
+h1, h2, .slider-arrows {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .contactus123 {
@@ -54,6 +68,7 @@ h1, h2, button, .slider-arrows {
   cursor: pointer;
   border: #1e90ff 1px solid;
   transition: background-color 0.3s ease;
+  z-index: 1;
 }
 
 .contactus123:hover {
@@ -76,7 +91,6 @@ h1, h2, button, .slider-arrows {
 
 #main a {
   position: relative;
-  z-index: 2; 
     background-color: #EF4524;
     font-family: "Playfair Display", Sans-serif;
     font-size: 20px;
@@ -96,10 +110,6 @@ h1, h2, button, .slider-arrows {
     color: white;
 }
 
-.arrow_right{
-  margin-right: 2.5rem;
-}
-
 .slider-arrows {
   position: absolute;
   top: 50%;
@@ -107,8 +117,8 @@ h1, h2, button, .slider-arrows {
   display: flex;
   justify-content: space-between;
   transform: translateY(-50%);
-  padding: 0 20px;
 }
+
 
 .arrow {
   background: rgba(0, 0, 0, 0.4);
@@ -159,4 +169,106 @@ h2 {
 }
 
 
+}
+
+/* --- GALLERY-LIKE SLIDE EFFECT --- */
+.slide-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+  z-index: 0;
+}
+
+/* Slide-in directions */
+.slide.next.right {
+  animation: slideFromRight 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.slide.next.left {
+  animation: slideFromLeft 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* Keyframes for swipe motion (like phone gallery) */
+@keyframes slideFromRight {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideFromLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.slide.current.right {
+  animation: slideOutLeft 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+.slide.current.left {
+  animation: slideOutRight 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes slideOutLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes slideOutRight {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(100%); }
+}
+
+
+/* --- TEXT SLIDE-IN FROM BOTTOM --- */
+.text-slide {
+  opacity: 0;
+  transform: translateY(60px);
+  animation: slideTextUp 1s ease forwards;
+  position: relative;
+  z-index: 9;
+}
+
+.text-slide button{
+  margin-top: 4rem;
+}
+
+
+@keyframes slideTextUp {
+  0% {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Smooth stagger for natural timing */
+h1.text-slide {
+  animation-delay: 0.1s;
+}
+
+h2.text-slide {
+  animation-delay: 0.3s;
+}
+
+div.text-slide {
+  animation-delay: 0.5s;
 }
