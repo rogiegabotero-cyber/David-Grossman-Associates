@@ -33,36 +33,40 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    color: white;
 }
 
-.l_div input, textarea {
+.l_div2 input, textarea {
     border-radius: 5px;
     border: none;
     padding: 5px;;
+    color: white;
 }
     
-
 .input_l {
     display: flex;
     flex-direction: row;
     justify-content: center;
     gap: 1%;
     margin-bottom: 1%;
-    width: 100%;
+    width: 100%;color: white;
 }
 
 .input_R {
     display: flex;
     flex-direction: column;
     width: 100%;
+    color: white;
 }
 .input_R input {
     margin-bottom: 1%;
+    color: white;
 }
 
 .input_R textarea {
-    background-color: white;
+    background-color:none;
     max-width: 97%;
+    color: white;
 }
 
 .R_div{
@@ -138,4 +142,11 @@
      .contacts_main h1 {
         margin-bottom: 5%;
      }
+
+     .l_div2 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        margin: 2rem;
+     }
+
 }
