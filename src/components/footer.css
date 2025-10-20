@@ -125,10 +125,14 @@
 }
 
 @media (max-width: 768px){
-    .footer_div div{
+    .footer_div{
         flex-direction: column;
         margin: 0;
         padding: 0;
+    }
+
+    .bot_div{
+        flex-direction: column;
     }
 
     .footer_div{
@@ -157,8 +161,11 @@
         color: #EF4524;
     }
 
+
     .icon_div1{
         flex-direction: row;
+        justify-content: center;
+        gap: 1rem;
     }
 
 }

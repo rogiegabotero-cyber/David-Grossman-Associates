@@ -13,10 +13,10 @@ const ContactPage = () => {
 
     emailjs
       .sendForm(
-        "service_oh45lfc",     // e.g. service_abcd123
-        "template_6c60y93",    // e.g. template_xyz789
+        "service_oh45lfc",    
+        "template_6c60y93",   
         form.current,
-        "ZwVsvyjBA-lJCHEYE"      // e.g. your_public_key
+        "ZwVsvyjBA-lJCHEYE"      
       )
       .then(
         (result) => {
@@ -47,7 +47,7 @@ const ContactPage = () => {
       <div className="info">
         <div className="contact_main2">
           <div className="details2">
-            {/* Contact Form */}
+
             <form ref={form} onSubmit={handleSubmit} className="l_div2">
               <input type="text" name="name" placeholder="Name" required />
               <input type="email" name="email" placeholder="Email" required />
@@ -83,7 +83,6 @@ const ContactPage = () => {
               </div>
             </form>
 
-            {/* Contact Info */}
             <div className="R_div2">
               <h2>David Grossman & Associates</h2>
 
