@@ -13,7 +13,7 @@ const footer = () => {
                     <h1>David Grossman <br />& Associates</h1>
                 </div>
                 <p>
-                    Why delay? describe the tasknow and you will 
+                    Why delay? describe the task now and you will 
                     be surprised how quickly you will respond
                 </p>
                 <div className='icon_div1'>

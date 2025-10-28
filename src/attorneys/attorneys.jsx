@@ -16,7 +16,7 @@ const Attorneys = () => {
         <h2>Attorneys</h2>
         <div className="back_link">
           <Link to="/" className="back-home">
-            <House strokeWidth={1} size={20} /> Attorneys
+            <House strokeWidth={1} size={20} /> Home
           </Link>
           <ChevronsRight className="back-home" size={20} />
           Attorneys

@@ -48,6 +48,14 @@
     
 }
 
+.date data{
+    padding-right: 10px;
+}
+
+.date p{
+    padding-left: 10px;
+}
+
 .mix{
     display: flex;
     flex-direction: column;

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import emailjs from "emailjs-com";
 import "./contact_page.css";
 import { Link } from "react-router-dom";
@@ -8,16 +8,22 @@ const ContactPage = () => {
   const [mapLoaded, setMapLoaded] = useState(false);
   const form = useRef();
 
+  useEffect(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
+  
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     emailjs
       .sendForm(
-        "service_oh45lfc",    
-        "template_6c60y93",   
+        import.meta.env.VITE_SERVICE_ID,    
+        import.meta.env.VITE_TEMPLATE_ID,   
         form.current,
-        "ZwVsvyjBA-lJCHEYE"      
+        import.meta.env.VITE_USER_ID
       )
+
       .then(
         (result) => {
           alert("Message sent successfully!");

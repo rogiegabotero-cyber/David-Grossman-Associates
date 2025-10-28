@@ -4,21 +4,8 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
-  const [showForm, setShowForm] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const location = useLocation(); // get current URL
-
-  const handleEmailClick = (e) => {
-    e.preventDefault();
-    setShowForm(true);
-  };
-
-  const handleClose = () => setShowForm(false);
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert('Your message has been sent!');
-    setShowForm(false);
-  };
+  const location = useLocation(); 
 
   return (
     <header className='whole_header'>
@@ -31,9 +18,15 @@ const Header = () => {
           </p>
           <p>
             <i className="bi bi-envelope-fill"></i>
-            <a href="#" onClick={handleEmailClick} className="contact-link">
+            <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=david@davidgrossmanandassociates.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="contact-link"
+            >
               david@davidgrossmanandassociates.com
             </a>
+
           </p>
         </div>
 
@@ -66,33 +59,6 @@ const Header = () => {
           </Link>
         </div>
       </div>
-
-      {showForm && (
-        <div className="popup-overlay">
-          <div className="popup-form">
-            <h2>Send Us a Message</h2>
-            <form onSubmit={handleSubmit}>
-              <label>To:
-                <input type="email" name="to" value="david@davidgrossmanandassociates.com" readOnly />
-              </label>
-              <label>From:
-                <input type="email" name="email" required placeholder="Your email address" />
-              </label>
-              <label>Message:
-                <textarea name="message" rows="4" required placeholder="Write your message here..."></textarea>
-              </label>
-              <label>Attach File:
-                <input type="file" name="attachment" />
-              </label>
-
-              <div className="form-buttons">
-                <button type="button" onClick={handleClose} className="cancel-btn">Cancel</button>
-                <button type="submit" className="send-btn">Send</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </header>
   );
 };
