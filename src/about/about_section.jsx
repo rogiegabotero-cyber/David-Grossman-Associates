@@ -5,7 +5,16 @@ import { House, ChevronsRight, Eye, Target } from "lucide-react";
 
 const AboutSection = () => {
   useEffect(() => {
+    // Scroll to top when the page loads
     window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // Set the browser tab title
+    document.title = "About – David Grossman & Associates";
+
+    // Optional: Reset to default when leaving the page
+    return () => {
+      document.title = "David Grossman & Associates";
+    };
   }, []);
 
   return (

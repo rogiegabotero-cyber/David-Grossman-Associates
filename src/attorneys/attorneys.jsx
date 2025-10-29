@@ -8,6 +8,12 @@ const Attorneys = () => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+
+    document.title = "Attorneys – David Grossman & Associates";
+
+    return () => {
+      document.title = "David Grossman & Associates";
+    };
   }, []);
 
   return (

@@ -26,10 +26,17 @@ const PracticeArea = () => {
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
+
+    document.title = "Practice Area – David Grossman & Associates";
+    
+    return () => {
+      document.title = "David Grossman & Associates";
+    };
+    
   }, [location]);
 
 
-  return (
+  return (            
     <div>
       <div className="orange">
         <h2>Practice Areas</h2>

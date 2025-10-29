@@ -18,7 +18,10 @@ const HomePage = () => {
     const interval = setInterval(() => {
       handleNext();
     }, 10000);
+    document.title = "David Grossman & Associates";
+  
     return () => clearInterval(interval);
+    
   }, [currentIndex]);
 
   const triggerTextAnimation = () => {

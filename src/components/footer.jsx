@@ -13,8 +13,9 @@ const footer = () => {
                     <h1>David Grossman <br />& Associates</h1>
                 </div>
                 <p>
-                    Why delay? describe the task now and you will 
-                    be surprised how quickly you will respond
+                    Why delay, describe the task now
+                    and you will be surprised how
+                    quickly we will respond!
                 </p>
                 <div className='icon_div1'>
                     <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">

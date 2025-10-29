@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from 'react';
 import './extended_news.css'
 import { Link } from "react-router-dom";
@@ -6,12 +7,15 @@ const expanded_news = () => {
 
       useState(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
-      }, []);
+        
+        document.title = "The Athens Independent repor... – David Grossman & Associates";
     
+      }, []);
+
   return (
     <div className='maindiv_athens'>
         <h2 className='orange_h2'>
-            The Athens Independent HAHAHAHA reported that the city of Athens authorized Mayor Steve Patterson
+            The Athens Independent reported that the city of Athens authorized Mayor Steve Patterson
             to contract with Grossman & Kelly to pursue legal action against firms deemed liable in 
             prescription-related matters.
         </h2>

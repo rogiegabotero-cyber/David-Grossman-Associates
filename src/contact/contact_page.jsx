@@ -2,37 +2,45 @@ import React, { useEffect, useState, useRef } from "react";
 import emailjs from "emailjs-com";
 import "./contact_page.css";
 import { Link } from "react-router-dom";
-import { House, ChevronsRight } from "lucide-react";
+import { House, ChevronsRight, Loader2 } from "lucide-react"; // <-- Added Loader2 icon
 
 const ContactPage = () => {
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [isSending, setIsSending] = useState(false); // <-- Track sending state
   const form = useRef();
 
   useEffect(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, []);
-  
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    
+    document.title = "Contact Us – David Grossman & Associates";
+
+    return () => {
+      document.title = "David Grossman & Associates";
+    };
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsSending(true); // Start loading
 
     emailjs
       .sendForm(
-        import.meta.env.VITE_SERVICE_ID,    
-        import.meta.env.VITE_TEMPLATE_ID,   
+        import.meta.env.VITE_SERVICE_ID,
+        import.meta.env.VITE_TEMPLATE_ID,
         form.current,
         import.meta.env.VITE_USER_ID
       )
-
       .then(
         (result) => {
           alert("Message sent successfully!");
           console.log(result.text);
           form.current.reset();
+          setIsSending(false); // Stop loading
         },
         (error) => {
           alert("Failed to send message. Please try again later.");
           console.error(error.text);
+          setIsSending(false); // Stop loading on error
         }
       );
   };
@@ -53,7 +61,6 @@ const ContactPage = () => {
       <div className="info">
         <div className="contact_main2">
           <div className="details2">
-
             <form ref={form} onSubmit={handleSubmit} className="l_div2">
               <input type="text" name="name" placeholder="Name" required />
               <input type="email" name="email" placeholder="Email" required />
@@ -68,24 +75,39 @@ const ContactPage = () => {
                     <input type="radio" name="heardFrom" value="Social Media" />
                     Social Media
                   </label>
-
                   <label>
                     <input type="radio" name="heardFrom" value="Radio" />
                     Radio
                   </label>
-
                   <label>
-                    <input type="radio" name="heardFrom" value="Google Search/Engine" />
+                    <input
+                      type="radio"
+                      name="heardFrom"
+                      value="Google Search/Engine"
+                    />
                     Google Search/Engine
                   </label>
-
                   <label>
                     <input type="radio" name="heardFrom" value="Other" />
                     Other
                   </label>
                 </div>
 
-                <button type="submit">Send</button>
+                {/* Send button with loading spinner */}
+                <button type="submit" disabled={isSending}>
+                  {isSending ? (
+                    <>
+                      <Loader2
+                        className="animate-spin"
+                        size={18}
+                        style={{ marginRight: "8px" }}
+                      />
+                      Sending...
+                    </>
+                  ) : (
+                    "Send"
+                  )}
+                </button>
               </div>
             </form>
 
@@ -107,7 +129,10 @@ const ContactPage = () => {
                 <p>Fax: 516.686.6771</p>
               </div>
 
-              <div className="map_container" style={{ position: "relative", width: "100%", height: "300px" }}>
+              <div
+                className="map_container"
+                style={{ position: "relative", width: "100%", height: "300px" }}
+              >
                 {!mapLoaded && (
                   <div
                     className="map_loader"

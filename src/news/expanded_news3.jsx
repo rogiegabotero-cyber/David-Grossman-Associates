@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from 'react';
 import './extended_news.css'
 import { Link } from "react-router-dom";
@@ -6,6 +7,12 @@ const expanded_news = () => {
 
       useState(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
+
+        document.title = "Social media platforms are often... – David Grossman & Associates";
+    
+        return () => {
+          document.title = "David Grossman & Associates";
+        };
       }, []);
     
   return (
