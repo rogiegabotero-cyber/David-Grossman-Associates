@@ -18,7 +18,7 @@ const HomePage = () => {
     const interval = setInterval(() => {
       handleNext();
     }, 10000);
-    document.title = "David Grossman & Associates";
+    document.title = " David Grossman & Associates";
   
     return () => clearInterval(interval);
     
@@ -26,7 +26,7 @@ const HomePage = () => {
 
   const triggerTextAnimation = () => {
     setTextAnimate(false);
-    setTimeout(() => setTextAnimate(true), 50); // restart animation
+    setTimeout(() => setTextAnimate(true), 50);
   };
 
   const handleNext = () => {
