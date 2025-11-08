@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import emailjs from "emailjs-com";
 import { Loader2 } from "lucide-react";
 import "./claim_form.css";
@@ -9,6 +9,16 @@ const ClaimForm = () => {
   const [contactRelation, setContactRelation] = useState("");
   const [claimantDOB, setClaimantDOB] = useState("");
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
+
+  useEffect(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      
+      document.title = "Contact Us – David Grossman & Associates";
+  
+      return () => {
+        document.title = "David Grossman & Associates";
+      };
+    }, []);
   
   // Contact form data for mirroring
   const [contactData, setContactData] = useState({
@@ -127,7 +137,7 @@ const ClaimForm = () => {
         <h3>Contact Information</h3>
         <label>
           <span>Contact's relation to claimant *</span>
-          <select 
+          <select
             name="Contact_relation" 
             required
             value={contactRelation}
@@ -143,109 +153,113 @@ const ClaimForm = () => {
           </select>
         </label>
 
-        <div className="name-row">
-          <label>
-            <span>First Name *</span>
-            <input 
-              name="Contact_First_Name"
-              value={contactData.firstName}
-              onChange={(e) => handleContactChange('firstName', e.target.value)}
-              required 
-            />
-          </label>
-          <label>
-            <span>Middle Name</span>
-            <input 
-              name="Contact_Middle_Name"
-              value={contactData.middleName}
-              onChange={(e) => handleContactChange('middleName', e.target.value)}
-            />
-          </label>
-          <label>
-            <span>Last Name *</span>
-            <input 
-              name="Contact_Last_Name"
-              value={contactData.lastName}
-              onChange={(e) => handleContactChange('lastName', e.target.value)}
-              required 
-            />
-          </label>
-          <label>
-            <span>Suffix</span>
-            <input 
-              name="Contact_Suffix"
-              value={contactData.suffix}
-              onChange={(e) => handleContactChange('suffix', e.target.value)}
-            />
-          </label>
-        </div>
+        <div
+          className={`contact-fields ${contactRelation === "myself" ? "slide-up" : ""}`}
+        >
+          <div className="name-row">
+            <label>
+              <span>First Name *</span>
+              <input
+                name="Contact_First_Name"
+                value={contactData.firstName}
+                onChange={(e) => handleContactChange('firstName', e.target.value)}
+                required
+              />
+            </label>
+            <label>
+              <span>Middle Name</span>
+              <input
+                name="Contact_Middle_Name"
+                value={contactData.middleName}
+                onChange={(e) => handleContactChange('middleName', e.target.value)}
+              />
+            </label>
+            <label>
+              <span>Last Name *</span>
+              <input
+                name="Contact_Last_Name"
+                value={contactData.lastName}
+                onChange={(e) => handleContactChange('lastName', e.target.value)}
+                required
+              />
+            </label>
+            <label>
+              <span>Suffix</span>
+              <input
+                name="Contact_Suffix"
+                value={contactData.suffix}
+                onChange={(e) => handleContactChange('suffix', e.target.value)}
+              />
+            </label>
+          </div>
 
-        <label>
-          <span>Street Address *</span>
-          <input 
-            name="Contact_Street_Address"
-            value={contactData.street}
-            onChange={(e) => handleContactChange('street', e.target.value)}
-            required 
-          />
-        </label>
-
-        <div className="address-row">
           <label>
-            <span>City *</span>
-            <input 
-              name="Contact_City"
-              value={contactData.city}
-              onChange={(e) => handleContactChange('city', e.target.value)}
-              required 
-            />
-          </label>
-          <label>
-            <span>State *</span>
-            <input 
-              name="Contact_State"
-              value={contactData.state}
-              onChange={(e) => handleContactChange('state', e.target.value)}
-              required 
-            />
-          </label>
-          <label>
-            <span>Zip Code *</span>
-            <input 
-              name="Contact_Zip"
-              value={contactData.zip}
-              onChange={(e) => handleContactChange('zip', e.target.value)}
-              required 
-            />
-          </label>
-        </div>
-
-        <div className="contact-row">
-          <label>
-            <span>Phone Number *</span>
-            <input 
-              name="Contact_Phone"
-              type="tel"
-              value={contactData.phone}
-              onChange={(e) => {
-                const formatted = formatPhoneNumber(e.target.value);
-                handleContactChange('phone', formatted);
-              }}
-              maxLength="12"
+            <span>Street Address *</span>
+            <input
+              name="Contact_Street_Address"
+              value={contactData.street}
+              onChange={(e) => handleContactChange('street', e.target.value)}
               required
             />
           </label>
 
-          <label>
-            <span>Email *</span>
-            <input 
-              name="Contact_Email" 
-              type="email"
-              value={contactData.email}
-              onChange={(e) => handleContactChange('email', e.target.value)}
-              required 
-            />
-          </label>
+          <div className="address-row">
+            <label>
+              <span>City *</span>
+              <input
+                name="Contact_City"
+                value={contactData.city}
+                onChange={(e) => handleContactChange('city', e.target.value)}
+                required
+              />
+            </label>
+            <label>
+              <span>State *</span>
+              <input
+                name="Contact_State"
+                value={contactData.state}
+                onChange={(e) => handleContactChange('state', e.target.value)}
+                required
+              />
+            </label>
+            <label>
+              <span>Zip Code *</span>
+              <input
+                name="Contact_Zip"
+                value={contactData.zip}
+                onChange={(e) => handleContactChange('zip', e.target.value)}
+                required
+              />
+            </label>
+          </div>
+
+          <div className="contact-row">
+            <label>
+              <span>Phone Number *</span>
+              <input
+                name="Contact_Phone"
+                type="tel"
+                value={contactData.phone}
+                onChange={(e) => {
+                  const formatted = formatPhoneNumber(e.target.value);
+                  handleContactChange('phone', formatted);
+                }}
+                maxLength="12"
+                required
+              />
+            </label>
+
+            <label>
+              <span>Email *</span>
+              <input
+                name="Contact_Email"
+                type="email"
+                value={contactData.email}
+                onChange={(e) => handleContactChange('email', e.target.value)}
+                required
+              />
+            </label>
+          </div>
         </div>
 
         <h3>Claimant Information</h3>

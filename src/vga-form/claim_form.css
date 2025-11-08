@@ -47,6 +47,19 @@
   padding-bottom: 8px;
 }
 
+.contact-fields {
+  max-height: 2000px; /* large enough to fit all fields */
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+  opacity: 1;
+}
+
+.contact-fields.slide-up {
+  max-height: 0;
+  opacity: 0;
+}
+
+
 /* Row layouts for names and addresses */
 .name-row {
   display: grid;
@@ -70,15 +83,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-}
-
-@media (max-width: 768px) {
-  .name-row,
-  .address-row,
-  .contact-row,
-  .dob-gender-row {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* Label styling */
@@ -231,6 +235,8 @@ legend {
   margin-top: 10px;
 }
 
+
+
 .claim-form-page button:hover:not(:disabled) {
   background-color: #d63a1f;
 }
@@ -239,4 +245,15 @@ legend {
   background-color: #ccc;
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+
+@media (max-width: 768px) {
+  .name-row,
+  .address-row,
+  .contact-row,
+  .dob-gender-row {
+    grid-template-columns: 1fr;
+  }
+
 }
