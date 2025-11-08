@@ -61,7 +61,9 @@ const ContactPage = () => {
       <div className="info">
         <div className="contact_main2">
           <div className="details2">
+            
             <form ref={form} onSubmit={handleSubmit} className="l_div2">
+              <h2>Contact Us</h2>
               <input type="text" name="name" placeholder="Name" required />
               <input type="email" name="email" placeholder="Email" required />
               <input type="tel" name="phone" placeholder="Phone No." />

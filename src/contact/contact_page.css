@@ -49,7 +49,7 @@ button[disabled] {
   display: inline-block;
   margin-top: 15px;
   padding: 10px 20px;
-  background-color: #ff6600;
+  background-color: #EF4524;
   color: white;
   border-radius: 5px;
   text-decoration: none;
@@ -57,7 +57,7 @@ button[disabled] {
   margin-top: 3rem;
 }
 .claim-btn:hover {
-  background-color: #cc5200;
+  background-color: #EF4524;
 }
 
 
@@ -104,7 +104,10 @@ button[disabled] {
     align-items: center;
     background-color: #EF4524;
     padding: 2rem;
-    
+}
+
+.l_div2 h2{
+  margin-bottom: 1rem;
 }
 
 .l_div2 input, textarea {

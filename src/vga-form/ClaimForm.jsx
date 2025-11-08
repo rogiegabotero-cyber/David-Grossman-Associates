@@ -9,17 +9,39 @@ const ClaimForm = () => {
   const [contactRelation, setContactRelation] = useState("");
   const [claimantDOB, setClaimantDOB] = useState("");
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
+  const [claimantGender, setClaimantGender] = useState("");
 
-  useEffect(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      
-      document.title = "Contact Us – David Grossman & Associates";
-  
-      return () => {
-        document.title = "David Grossman & Associates";
-      };
-    }, []);
-  
+  // Claimant field states
+  const [claimantFirstName, setClaimantFirstName] = useState("");
+  const [claimantMiddleName, setClaimantMiddleName] = useState("");
+  const [claimantLastName, setClaimantLastName] = useState("");
+  const [claimantSuffix, setClaimantSuffix] = useState("");
+  const [claimantStreet, setClaimantStreet] = useState("");
+  const [claimantCity, setClaimantCity] = useState("");
+  const [claimantState, setClaimantState] = useState("");
+  const [claimantZip, setClaimantZip] = useState("");
+  const [claimantPhone, setClaimantPhone] = useState("");
+  const [claimantEmail, setClaimantEmail] = useState("");
+
+  const collectCheckedValues = () => {
+  const fields = [
+    "Gaming_Platforms",
+    "Games_Played",
+    "Injuries",
+    "Life_Effects",
+    "Medical_Treatments"
+  ];
+
+  fields.forEach((field) => {
+    const checkboxes = form.current.querySelectorAll(`input[name="${field}[]"]:checked`);
+    const values = Array.from(checkboxes).map((c) => c.value);
+    const hiddenInput = form.current.querySelector(`#${field}_hidden`);
+    if (hiddenInput) {
+      hiddenInput.value = values.join(", ");
+    }
+  });
+};
+
   // Contact form data for mirroring
   const [contactData, setContactData] = useState({
     firstName: "",
@@ -34,7 +56,63 @@ const ClaimForm = () => {
     email: ""
   });
 
-  // Phone number formatting function
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.title = "Contact Us – David Grossman & Associates";
+
+    return () => {
+      document.title = "David Grossman & Associates";
+    };
+  }, []);
+
+  // Mirror Claimant info to Contact info if relation is "myself"
+   useEffect(() => {
+  if (contactRelation === "myself") {
+    setContactData({
+      firstName: claimantFirstName,
+      middleName: claimantMiddleName,
+      lastName: claimantLastName,
+      suffix: claimantSuffix,
+      street: claimantStreet,
+      city: claimantCity,
+      state: claimantState,
+      zip: claimantZip,
+      phone: claimantPhone,
+      email: claimantEmail
+    });
+  }
+}, [
+  contactRelation,
+  claimantFirstName,
+  claimantMiddleName,
+  claimantLastName,
+  claimantSuffix,
+  claimantStreet,
+  claimantCity,
+  claimantState,
+  claimantZip,
+  claimantPhone,
+  claimantEmail
+]);
+
+useEffect(() => {
+  if (contactRelation && contactRelation !== "myself") {
+    setContactData({
+      firstName: "",
+      middleName: "",
+      lastName: "",
+      suffix: "",
+      street: "",
+      city: "",
+      state: "",
+      zip: "",
+      phone: "",
+      email: ""
+    });
+  }
+}, [contactRelation]);
+
+  // Phone number formatting
   const formatPhoneNumber = (value) => {
     const cleaned = value.replace(/\D/g, "");
     const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
@@ -71,41 +149,52 @@ const ClaimForm = () => {
     e.preventDefault();
     setIsSending(true);
 
-    // EmailJS automatically extracts all form fields with their 'name' attributes
-    // All fields are properly named and formatted for email delivery:
-    // - Contact Information (Contact_First_Name, Contact_Last_Name, etc.)
-    // - Claimant Information (Claimant_First_Name, Claimant_Last_Name, etc.)
-    // - Gaming data (Gaming_Platforms[], Games_Played[], etc.)
-    // - Medical information (Injuries[], Life_Effects[], Medical_Treatments[])
-    // - Auto-computed field: Claimant_a_minor (calculated from date of birth)
-    
+    // ✅ Collect all checkbox values into hidden fields
+    collectCheckedValues();
+
     emailjs
       .sendForm(
-        import.meta.env.VITE_SERVICE_ID,
-        import.meta.env.VITE_TEMPLATE_ID,
+        import.meta.env.VITE_SERVICE_ID3,
+        import.meta.env.VITE_TEMPLATE_ID3,
         form.current,
-        import.meta.env.VITE_USER_ID
+        import.meta.env.VITE_USER_ID3
       )
       .then(
         () => {
           alert("Form submitted successfully!");
           form.current.reset();
-          setContactData({
-            firstName: "",
-            middleName: "",
-            lastName: "",
-            suffix: "",
-            street: "",
-            city: "",
-            state: "",
-            zip: "",
-            phone: "",
-            email: ""
-          });
-          setClaimantDOB("");
-          setContactRelation("");
-          setDisclaimerAccepted(false);
           setIsSending(false);
+          
+          setClaimantFirstName(""); 
+          setClaimantMiddleName(""); 
+          setClaimantLastName(""); 
+          setClaimantSuffix(""); 
+          setClaimantStreet(""); 
+          setClaimantCity(""); 
+          setClaimantState(""); 
+          setClaimantZip(""); 
+          setClaimantPhone(""); 
+          setClaimantEmail("");
+
+          setContactData({ 
+            firstName: "", 
+            middleName: "", 
+            lastName: "", 
+            suffix: "", 
+            street: "", 
+            city: "", 
+            state: "", 
+            zip: "", 
+            phone: "", 
+            email: "" 
+          }); 
+
+          setClaimantDOB(""); 
+          setContactRelation(""); 
+          setDisclaimerAccepted(false); 
+          setIsSending(false);
+
+          
         },
         (error) => {
           console.error(error);
@@ -118,7 +207,7 @@ const ClaimForm = () => {
   return (
     <div className="claim-form-page">
       <h2>Video Game Claim Questionnaire</h2>
-      
+
       <div className="intro-text">
         <p>
           Video game addiction (VGA), also known as gaming disorder or internet gaming disorder, 
@@ -138,7 +227,7 @@ const ClaimForm = () => {
         <label>
           <span>Contact's relation to claimant *</span>
           <select
-            name="Contact_relation" 
+            name="Contact_relation"
             required
             value={contactRelation}
             onChange={(e) => setContactRelation(e.target.value)}
@@ -153,17 +242,16 @@ const ClaimForm = () => {
           </select>
         </label>
 
-        <div
-          className={`contact-fields ${contactRelation === "myself" ? "slide-up" : ""}`}
-        >
+        <div className={`contact-fields ${contactRelation === "myself" ? "slide-up" : ""}`}>
           <div className="name-row">
             <label>
               <span>First Name *</span>
               <input
                 name="Contact_First_Name"
                 value={contactData.firstName}
-                onChange={(e) => handleContactChange('firstName', e.target.value)}
+                onChange={(e) => handleContactChange("firstName", e.target.value)}
                 required
+                
               />
             </label>
             <label>
@@ -171,7 +259,8 @@ const ClaimForm = () => {
               <input
                 name="Contact_Middle_Name"
                 value={contactData.middleName}
-                onChange={(e) => handleContactChange('middleName', e.target.value)}
+                onChange={(e) => handleContactChange("middleName", e.target.value)}
+                
               />
             </label>
             <label>
@@ -179,8 +268,9 @@ const ClaimForm = () => {
               <input
                 name="Contact_Last_Name"
                 value={contactData.lastName}
-                onChange={(e) => handleContactChange('lastName', e.target.value)}
+                onChange={(e) => handleContactChange("lastName", e.target.value)}
                 required
+                
               />
             </label>
             <label>
@@ -188,7 +278,8 @@ const ClaimForm = () => {
               <input
                 name="Contact_Suffix"
                 value={contactData.suffix}
-                onChange={(e) => handleContactChange('suffix', e.target.value)}
+                onChange={(e) => handleContactChange("suffix", e.target.value)}
+                
               />
             </label>
           </div>
@@ -198,8 +289,9 @@ const ClaimForm = () => {
             <input
               name="Contact_Street_Address"
               value={contactData.street}
-              onChange={(e) => handleContactChange('street', e.target.value)}
+              onChange={(e) => handleContactChange("street", e.target.value)}
               required
+              
             />
           </label>
 
@@ -209,8 +301,9 @@ const ClaimForm = () => {
               <input
                 name="Contact_City"
                 value={contactData.city}
-                onChange={(e) => handleContactChange('city', e.target.value)}
+                onChange={(e) => handleContactChange("city", e.target.value)}
                 required
+                
               />
             </label>
             <label>
@@ -218,8 +311,9 @@ const ClaimForm = () => {
               <input
                 name="Contact_State"
                 value={contactData.state}
-                onChange={(e) => handleContactChange('state', e.target.value)}
+                onChange={(e) => handleContactChange("state", e.target.value)}
                 required
+                
               />
             </label>
             <label>
@@ -227,8 +321,9 @@ const ClaimForm = () => {
               <input
                 name="Contact_Zip"
                 value={contactData.zip}
-                onChange={(e) => handleContactChange('zip', e.target.value)}
+                onChange={(e) => handleContactChange("zip", e.target.value)}
                 required
+               
               />
             </label>
           </div>
@@ -240,12 +335,10 @@ const ClaimForm = () => {
                 name="Contact_Phone"
                 type="tel"
                 value={contactData.phone}
-                onChange={(e) => {
-                  const formatted = formatPhoneNumber(e.target.value);
-                  handleContactChange('phone', formatted);
-                }}
+                onChange={(e) => handleContactChange("phone", formatPhoneNumber(e.target.value))}
                 maxLength="12"
                 required
+                
               />
             </label>
 
@@ -255,80 +348,89 @@ const ClaimForm = () => {
                 name="Contact_Email"
                 type="email"
                 value={contactData.email}
-                onChange={(e) => handleContactChange('email', e.target.value)}
+                onChange={(e) => handleContactChange("email", e.target.value)}
                 required
+                
               />
             </label>
           </div>
         </div>
 
         <h3>Claimant Information</h3>
-        
+
         <div className="name-row">
           <label>
             <span>First Name *</span>
-            <input 
-              name="Claimant_First_Name" 
-              value={contactRelation === "myself" ? contactData.firstName : undefined}
-              required 
+            <input
+              name="Claimant_First_Name"
+              value={claimantFirstName}
+              onChange={(e) => setClaimantFirstName(e.target.value)}
+              required
             />
           </label>
           <label>
             <span>Middle Name</span>
-            <input 
+            <input
               name="Claimant_Middle_Name"
-              value={contactRelation === "myself" ? contactData.middleName : undefined}
+              value={claimantMiddleName}
+              onChange={(e) => setClaimantMiddleName(e.target.value)}
             />
           </label>
           <label>
             <span>Last Name *</span>
-            <input 
+            <input
               name="Claimant_Last_Name"
-              value={contactRelation === "myself" ? contactData.lastName : undefined}
-              required 
+              value={claimantLastName}
+              onChange={(e) => setClaimantLastName(e.target.value)}
+              required
             />
           </label>
           <label>
             <span>Suffix</span>
-            <input 
+            <input
               name="Claimant_Suffix"
-              value={contactRelation === "myself" ? contactData.suffix : undefined}
+              value={claimantSuffix}
+              onChange={(e) => setClaimantSuffix(e.target.value)}
             />
           </label>
         </div>
 
         <label>
           <span>Street Address *</span>
-          <input 
+          <input
             name="Claimant_Street_Address"
-            value={contactRelation === "myself" ? contactData.street : undefined}
-            required 
+            value={claimantStreet}
+            onChange={(e) => setClaimantStreet(e.target.value)}
+            required
           />
         </label>
 
         <div className="address-row">
           <label>
             <span>City *</span>
-            <input 
+            <input
               name="Claimant_City"
-              value={contactRelation === "myself" ? contactData.city : undefined}
-              required 
+              value={claimantCity}
+              onChange={(e) => setClaimantCity(e.target.value)}
+              required
             />
           </label>
           <label>
             <span>State *</span>
-            <input 
+            <input
               name="Claimant_State"
-              value={contactRelation === "myself" ? contactData.state : undefined}
-              required 
+              value={claimantState}
+              onChange={(e) => setClaimantState(e.target.value)}
+              required
             />
           </label>
           <label>
             <span>Zip Code *</span>
-            <input 
+            <input
               name="Claimant_Zip"
-              value={contactRelation === "myself" ? contactData.zip : undefined}
-              required 
+              value={claimantZip}
+              onChange={(e) => setClaimantZip(e.target.value)}
+              required
             />
           </label>
         </div>
@@ -336,15 +438,11 @@ const ClaimForm = () => {
         <div className="contact-row">
           <label>
             <span>Phone Number *</span>
-            <input 
-              name="Claimant_Phone" 
+            <input
+              name="Claimant_Phone"
               type="tel"
-              value={contactRelation === "myself" ? contactData.phone : undefined}
-              onChange={(e) => {
-                if (contactRelation !== "myself") {
-                  e.target.value = formatPhoneNumber(e.target.value);
-                }
-              }}
+              value={claimantPhone}
+              onChange={(e) => setClaimantPhone(formatPhoneNumber(e.target.value))}
               maxLength="12"
               required
             />
@@ -352,11 +450,12 @@ const ClaimForm = () => {
 
           <label>
             <span>Email *</span>
-            <input 
-              name="Claimant_Email" 
+            <input
+              name="Claimant_Email"
               type="email"
-              value={contactRelation === "myself" ? contactData.email : undefined}
-              required 
+              value={claimantEmail}
+              onChange={(e) => setClaimantEmail(e.target.value)}
+              required
             />
           </label>
         </div>
@@ -364,8 +463,8 @@ const ClaimForm = () => {
         <div className="dob-gender-row">
           <label>
             <span>Date of Birth *</span>
-            <input 
-              name="Claimant_DOB" 
+            <input
+              name="Claimant_DOB"
               type="date"
               value={claimantDOB}
               onChange={(e) => setClaimantDOB(e.target.value)}
@@ -375,7 +474,12 @@ const ClaimForm = () => {
 
           <label>
             <span>Gender *</span>
-            <select name="Claimant_Gender" required>
+            <select
+              name="Claimant_Gender"
+              value={claimantGender}
+              onChange={(e) => setClaimantGender(e.target.value)}
+              required
+            >
               <option value="">Select Gender</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
@@ -383,6 +487,7 @@ const ClaimForm = () => {
               <option value="undisclosed">Undisclosed</option>
             </select>
           </label>
+
         </div>
 
         {/* Hidden field for auto-computed minor status */}
@@ -461,6 +566,7 @@ const ClaimForm = () => {
                 <span>{platform}</span>
               </label>
             ))}
+            <input type="hidden" name="Gaming_Platforms" id="Gaming_Platforms_hidden" />
           </div>
         </fieldset>
 
@@ -489,6 +595,7 @@ const ClaimForm = () => {
                 <span>{game}</span>
               </label>
             ))}
+            <input type="hidden" name="Games_Played" id="Games_Played_hidden" />
           </div>
         </fieldset>
 
@@ -517,6 +624,7 @@ const ClaimForm = () => {
                 <span>{injury}</span>
               </label>
             ))}
+            <input type="hidden" name="Injuries" id="Injuries_hidden" />
           </div>
         </fieldset>
 
@@ -541,6 +649,7 @@ const ClaimForm = () => {
                 <span>{effect}</span>
               </label>
             ))}
+            <input type="hidden" name="Life_Effects" id="Life_Effects_hidden" />
           </div>
         </fieldset>
 
@@ -562,6 +671,7 @@ const ClaimForm = () => {
                 <span>{treatment}</span>
               </label>
             ))}
+            <input type="hidden" name="Medical_Treatments" id="Medical_Treatments_hidden" />
           </div>
         </fieldset>
 
