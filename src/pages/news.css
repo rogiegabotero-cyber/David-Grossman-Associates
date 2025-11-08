@@ -9,14 +9,17 @@
 .main_news h1 {
     color: black;
     margin: 4%;
+    font-family: "Playfair Display";
 }
 
 .main_news div strong{
     color: black;
+    font-family: "Playfair Display";
 }
 
 .main_news div p {
     color: black;
+    font-family: "Playfair Display";
 }
 
 .content_div {
@@ -38,6 +41,7 @@
     color: #d34916;
     text-decoration: none;
     text-decoration: none;
+    font-family: "Playfair Display";
 }
 
 .learn_more:hover {

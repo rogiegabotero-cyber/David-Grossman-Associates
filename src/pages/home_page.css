@@ -1,9 +1,9 @@
 body {
   padding: 0;
   margin: 0;
-  font-family: Sans-serif;
   color: white;
   text-align: center;
+  font-family: "Playfair Display";
 }
 
 #main {
@@ -69,6 +69,7 @@ h1, h2, .slider-arrows {
   border: #1e90ff 1px solid;
   transition: background-color 0.3s ease;
   z-index: 1;
+  font-family: "Playfair Display";
 }
 
 .contactus123:hover {
@@ -104,10 +105,12 @@ h1, h2, .slider-arrows {
     background-color: #ef462400;
     border: solid 1px #ffffff;
     color: #ffffff;
+    font-family: "Playfair Display";
 }
 
 #main a button:hover {
     color: white;
+    font-family: "Playfair Display";
 }
 
 .slider-arrows {
@@ -128,6 +131,7 @@ h1, h2, .slider-arrows {
   transition: background 0.3s ease;
   padding: 8px;
   border-radius: 50%;
+  font-family: "Playfair Display";
 }
 
 .arrow:hover {

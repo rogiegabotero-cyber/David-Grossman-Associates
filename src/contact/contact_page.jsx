@@ -179,6 +179,12 @@ const ContactPage = () => {
                 ></iframe>
               </div>
             </div>
+
+            <div className="R_div3">
+              <Link to="/claim-form" className="claim-btn">
+                Go to Claim Form
+              </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -45,6 +45,22 @@ button[disabled] {
     gap: 1rem;
 }
 
+.claim-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #ff6600;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: 0.3s;
+  margin-top: 3rem;
+}
+.claim-btn:hover {
+  background-color: #cc5200;
+}
+
+
 .orange div {
     display: flex;
     flex-direction: row;

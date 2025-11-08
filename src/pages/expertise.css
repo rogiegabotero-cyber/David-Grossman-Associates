@@ -7,6 +7,7 @@
     justify-content: center;
     align-items: center;
     margin: 1%;
+    font-family: "Playfair Display";
 }
 
 .main h1{
@@ -16,6 +17,7 @@
     text-align: left;
     width: 100%;
     max-width: 66%;
+    font-family: "Playfair Display";
 }
 
 .main h2{
@@ -61,6 +63,7 @@
     color: #EF4524;
     text-decoration: none;
     font-size: 15px;
+    font-family: "Playfair Display";
 }
 
 .sample_area p {
@@ -71,6 +74,7 @@
 
 .sample_area a:hover {
     color: rgb(4, 0, 255);
+    font-family: "Playfair Display";
 }
 
 @media (max-width: 768px) {

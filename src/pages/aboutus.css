@@ -6,6 +6,7 @@
     gap: 4%;
     color: #000000;
     background-color: #d9d9d9;
+    font-family: "Playfair Display";
 }
 
 .left_div{
@@ -21,12 +22,14 @@
     padding-right: 2rem;
     font-weight: 400;
     font-size: 20px;
+    font-family: "Playfair Display";
 }
 
 .left_div button:hover {
     color: #EF4524;
     background-color: #ffffff;
     border: #EF4524 1px solid;
+    font-family: "Playfair Display";
 }
 
 .right_div{
