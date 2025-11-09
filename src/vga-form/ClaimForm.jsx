@@ -509,8 +509,15 @@ useEffect(() => {
           <input
             name="Claimant_Date_of_Death"
             type="date"
+            onChange={(e) => {
+              const hiddenField = form.current.querySelector('#Claimant_Date_of_Death_hidden');
+              hiddenField.value = e.target.value.trim() === "" ? "NA" : e.target.value;
+            }}
           />
+          {/* Hidden fallback field */}
+          <input type="hidden" name="Claimant_Date_of_Death_fallback" id="Claimant_Date_of_Death_hidden" value="NA" />
         </label>
+
 
         <label>
           <span>Are you working with another law firm? *</span>
