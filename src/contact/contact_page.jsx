@@ -3,6 +3,7 @@ import emailjs from "emailjs-com";
 import "./contact_page.css";
 import { Link } from "react-router-dom";
 import { House, ChevronsRight, Loader2 } from "lucide-react"; // <-- Added Loader2 icon
+import GameBoi from "../assets/gameboi.webp"
 
 const ContactPage = () => {
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -95,7 +96,6 @@ const ContactPage = () => {
                   </label>
                 </div>
 
-                {/* Send button with loading spinner */}
                 <button type="submit" disabled={isSending}>
                   {isSending ? (
                     <>
@@ -183,10 +183,28 @@ const ContactPage = () => {
             </div>
 
             <div className="R_div3">
-              <Link to="/claim-form" className="claim-btn">
-                Go to Claim Form
-              </Link>
+              <div className="direction-box">
+                <h3 className="direction-title">File a Claim</h3>
+                <p className="direction-text">
+                  Click the button below to file your claim for <strong>Video Game Addiction</strong>.
+                </p>
+
+                <div className="direction-image">
+                  <img
+                    src={GameBoi}
+                    alt="Filing a Claim Illustration"
+                  />
+                </div>
+
+                <Link to="/claim-form" className="claim-btn">
+                  Go to Claim Form
+                </Link>
+              </div>
             </div>
+
+
+
+
           </div>
         </div>
       </div>

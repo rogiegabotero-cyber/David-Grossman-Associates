@@ -152,6 +152,12 @@ useEffect(() => {
     // ✅ Collect all checkbox values into hidden fields
     collectCheckedValues();
 
+    // If Claimant_Date_of_Death is empty, set it to "NA"
+    const deathDateField = form.current.querySelector('input[name="Claimant_Date_of_Death"]');
+    if (deathDateField && !deathDateField.value.trim()) {
+      deathDateField.value = "NA";
+    }
+
     emailjs
       .sendForm(
         import.meta.env.VITE_SERVICE_ID3,
@@ -279,7 +285,8 @@ useEffect(() => {
                 name="Contact_Suffix"
                 value={contactData.suffix}
                 onChange={(e) => handleContactChange("suffix", e.target.value)}
-                
+                required
+                placeholder="Type NA if none"
               />
             </label>
           </div>
@@ -391,6 +398,8 @@ useEffect(() => {
               name="Claimant_Suffix"
               value={claimantSuffix}
               onChange={(e) => setClaimantSuffix(e.target.value)}
+              required
+              placeholder="Type NA if none"
             />
           </label>
         </div>
@@ -504,8 +513,8 @@ useEffect(() => {
         </label>
 
         <label>
-          <span>Are you working with another law firm?</span>
-          <select name="Not_working_with_another_law_firm">
+          <span>Are you working with another law firm? *</span>
+          <select name="Not_working_with_another_law_firm" required>
             <option value="">Select</option>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
@@ -513,10 +522,11 @@ useEffect(() => {
         </label>
 
         <label>
-          <span>Legal authorization to pursue claim</span>
+          <span>Legal authorization to pursue claim *</span>
           <textarea
             name="Legal_authorization"
             rows="4"
+            required
           />
         </label>
 
@@ -527,6 +537,7 @@ useEffect(() => {
           <input
             name="Start_Play_Date"
             type="date"
+            required
           />
         </label>
 
@@ -562,7 +573,7 @@ useEffect(() => {
               "Other Gaming Device",
             ].map((platform) => (
               <label key={platform} className="checkbox-item">
-                <input type="checkbox" name="Gaming_Platforms[]" value={platform} />
+                <input type="checkbox" name="Gaming_Platforms[]" value={platform}/>
                 <span>{platform}</span>
               </label>
             ))}
@@ -591,7 +602,7 @@ useEffect(() => {
               "Other Game",
             ].map((game) => (
               <label key={game} className="checkbox-item">
-                <input type="checkbox" name="Games_Played[]" value={game} />
+                <input type="checkbox" name="Games_Played[]" value={game}/>
                 <span>{game}</span>
               </label>
             ))}
@@ -620,7 +631,7 @@ useEffect(() => {
               "No injury",
             ].map((injury) => (
               <label key={injury} className="checkbox-item">
-                <input type="checkbox" name="Injuries[]" value={injury} />
+                <input type="checkbox" name="Injuries[]" value={injury}/>
                 <span>{injury}</span>
               </label>
             ))}
@@ -645,7 +656,7 @@ useEffect(() => {
               "Other affect",
             ].map((effect) => (
               <label key={effect} className="checkbox-item">
-                <input type="checkbox" name="Life_Effects[]" value={effect} />
+                <input type="checkbox" name="Life_Effects[]" value={effect}/>
                 <span>{effect}</span>
               </label>
             ))}
@@ -667,7 +678,7 @@ useEffect(() => {
               "No treatment",
             ].map((treatment) => (
               <label key={treatment} className="checkbox-item">
-                <input type="checkbox" name="Medical_Treatments[]" value={treatment} />
+                <input type="checkbox" name="Medical_Treatments[]" value={treatment}/>
                 <span>{treatment}</span>
               </label>
             ))}
