@@ -34,6 +34,7 @@ const footer = () => {
                 <Link to="/">Home</Link>
                 <Link to="/about_section">About Us</Link>
                 <Link to="/practice_area">Practice Areas</Link>
+                <Link to="/file_claim_page">File a Claim</Link>
                 <Link to="/contact_page">Contact Us</Link>
             </div>
             <div className='second'>
@@ -54,8 +55,8 @@ const footer = () => {
             <div className='second'>
                 <h2>Get in Touch</h2>
                 <a href="">(631) 815-2575</a>
-                <a href="">david@davidgrossmanandassociates.com</a>
-                <a href="">881 OCEAN DRIVE, UNIT 14H, KEY BISCAYNE, FLORIDA 33149 </a>
+                <a href="">david@davidgross <br />manandassociates.com</a>
+                <a href="">881 OCEAN DRIVE, UNIT 14H, KEY <br /> BISCAYNE, FLORIDA 33149 </a>
             </div>
             <div>
 

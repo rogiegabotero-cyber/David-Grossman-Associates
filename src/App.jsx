@@ -18,6 +18,7 @@ import ExtendedNews2 from "./news/expanded_news2"
 import ExtendedNews3 from "./news/expanded_news3"
 import Attorneys from "./attorneys/attorneys";
 import ClaimForm from "./vga-form/ClaimForm"; 
+import FileClaimPage from "./fileclaim_page/file_claim_page";
 
 import { Routes, Route } from "react-router-dom";
 
@@ -79,6 +80,16 @@ function App() {
           element={
             <>
               <ContactPage />
+              <Footer />
+            </>
+          }
+        />
+
+        <Route
+          path="/file_claim_page"
+          element={
+            <>
+              <FileClaimPage />
               <Footer />
             </>
           }

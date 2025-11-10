@@ -58,7 +58,7 @@ const ClaimForm = () => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    document.title = "Contact Us – David Grossman & Associates";
+    document.title = "VGC Questionnaire – David Grossman & Associates";
 
     return () => {
       document.title = "David Grossman & Associates";

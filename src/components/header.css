@@ -144,7 +144,7 @@
 .links a{
     color: black;
     text-decoration: none;
-    font-size: 17px;
+    font-size: 16px;
     padding: 0rem 1.29rem;
     font-family: "Playfair Display",serif;
     font-weight: 500;
@@ -266,7 +266,7 @@ border: 1px solid #EF4524;
     display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 968px) {
     
     header{
         display: flex;

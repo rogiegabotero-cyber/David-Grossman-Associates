@@ -90,8 +90,9 @@ const Header = () => {
           <Link className={`link_btn ${location.pathname === '/practice_area' ? 'active' : ''}`} to="/practice_area">Practice Areas</Link>
           <Link className={`link_btn ${location.pathname === '/news_page' ? 'active' : ''}`} to="/news_page">News</Link>
           <Link className={`link_btn ${location.pathname === '/attorneys' ? 'active' : ''}`} to="/attorneys">Attorneys</Link>
+          <Link className={`link_btn ${location.pathname === '/file_claim_page' ? 'active' : ''}`} to="/file_claim_page"> File a Claim</Link>
           <Link className={`link_btn ${location.pathname === '/contact_page' ? 'active' : ''}`} to="/contact_page">Contact Us</Link>
-
+                     
           <Link to="/contact_page">
             <button id='free_consultationBtn'>Free consultation</button>
           </Link>

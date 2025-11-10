@@ -45,22 +45,6 @@ button[disabled] {
     gap: 1rem;
 }
 
-.claim-btn {
-  display: inline-block;
-  margin-top: 15px;
-  padding: 10px 20px;
-  background-color: #EF4524;
-  color: white;
-  border-radius: 5px;
-  text-decoration: none;
-  transition: 0.3s;
-  margin-top: 3rem;
-}
-.claim-btn:hover {
-  background-color: #EF4524;
-}
-
-
 .orange div {
     display: flex;
     flex-direction: row;
@@ -125,61 +109,6 @@ button[disabled] {
 .l_div2 textarea::placeholder, .l_div2 input::placeholder {
   color: #ffffff;  
   opacity: 1;      
-}
-
-.direction-box {
-  background-color: #fff9f5;
-  border: 2px solid #EF4524;
-  border-radius: 8px;
-  padding: 25px;
-  margin-top: 30px;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-.direction-title {
-  font-size: 1.4rem;
-  color: #EF4524;
-  margin-bottom: 10px;
-  font-weight: 700;
-}
-
-.direction-text {
-  color: #333;
-  font-size: 1rem;
-  margin-bottom: 18px;
-  line-height: 1.5;
-}
-
-
-.direction-image img {
-  height: auto;
-  border-radius: 8px;
-  object-fit: contain;
-  transition: transform 0.3s ease;
-  width: 100%;
-}
-
-.claim-btn {
-  display: inline-block;
-  background-color: #EF4524;
-  color: white;
-  text-decoration: none;
-  font-weight: 600;
-  padding: 10px 22px;
-  border-radius: 6px;
-  transition: background-color 0.3s ease;
-  border:1px solid #EF4524;
-}
-
-.claim-btn:hover {
-  background-color: #ffffff;
-  border:1px solid #EF4524;
-  color: #EF4524;
-}
-
-.R_div3{
-  max-width: 22%;
 }
 
 .input_R2 {
@@ -268,7 +197,4 @@ button[disabled] {
         margin-left: 5%;
     }
 
-    .R_div3{
-      max-width: 100%;
-    }
 }

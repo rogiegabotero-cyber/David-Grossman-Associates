@@ -1,0 +1,113 @@
+.file-claim-container {
+  color: #333;
+  line-height: 1.7;
+  background-color: #fafafa;
+}
+
+.file-claim-container p{
+    padding: 1px 15%;
+}
+
+.orange {
+    background-color: #EF4524;
+    padding: 3rem 0rem 3rem 0rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: white;
+}
+
+
+.back-home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+  font-weight: 500;
+}
+
+.back-home1 {
+  color: #EF4524;
+}
+
+.back-home:hover {
+  color: #008cff;
+  transition: 0.4s;
+}
+
+
+.direction-title{
+    color: #EF4524;
+    font-size: 1.5rem;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.direction-text{
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.R_div3 {
+  display: flex;
+  justify-content: center;
+  margin: .25rem 0;
+  margin-bottom: .50rem;
+}
+
+
+.direction-box {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.direction-image img {
+  width: 100%;
+  max-width: 275px;
+  margin: .25rem 0;
+}
+
+.claim-btn {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  background-color: #EF4524;
+  color: white;
+  font-weight: 500;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.3s ease;
+  border: 1px solid #EF4524;
+}
+
+.claim-btn:hover {
+  background-color: white;
+  border: 1px solid #EF4524;
+  color: #EF4524;
+}
+
+.consent-section {
+  font-size: 0.95rem;
+  color: #555;
+  text-align: center;
+  border-top: 1px solid #ddd;
+  padding-top: 1rem;
+}
+
+/* CTA Section */
+.cta-section {
+  text-align: center;
+  background: #fff;
+  padding: 40px 20px;
+  margin-top: 60px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
