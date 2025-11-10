@@ -285,8 +285,6 @@ useEffect(() => {
                 name="Contact_Suffix"
                 value={contactData.suffix}
                 onChange={(e) => handleContactChange("suffix", e.target.value)}
-                required
-                placeholder="Type NA if none"
               />
             </label>
           </div>
@@ -328,9 +326,13 @@ useEffect(() => {
               <input
                 name="Contact_Zip"
                 value={contactData.zip}
-                onChange={(e) => handleContactChange("zip", e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, '').slice(0, 5);
+                  handleContactChange("zip", value);
+                }}
+                pattern="[0-9]{5}"
+                maxLength="5"
                 required
-               
               />
             </label>
           </div>
@@ -398,8 +400,6 @@ useEffect(() => {
               name="Claimant_Suffix"
               value={claimantSuffix}
               onChange={(e) => setClaimantSuffix(e.target.value)}
-              required
-              placeholder="Type NA if none"
             />
           </label>
         </div>
@@ -438,7 +438,12 @@ useEffect(() => {
             <input
               name="Claimant_Zip"
               value={claimantZip}
-              onChange={(e) => setClaimantZip(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, '').slice(0, 5);
+                setClaimantZip(value);
+              }}
+              pattern="[0-9]{5}"
+              maxLength="5"
               required
             />
           </label>
@@ -529,11 +534,10 @@ useEffect(() => {
         </label>
 
         <label>
-          <span>Legal authorization to pursue claim *</span>
+          <span>Legal authorization to pursue claim</span>
           <textarea
             name="Legal_authorization"
             rows="4"
-            required
           />
         </label>
 
