@@ -54,6 +54,10 @@
   opacity: 1;
 }
 
+.contact-fields span{
+  margin-top: 1rem;
+}
+
 .contact-fields.slide-up {
   max-height: 0;
   opacity: 0;
@@ -167,6 +171,10 @@ legend {
   background-color: white;
 }
 
+.claim-form-page textarea{
+  max-width: 97%;
+}
+
 .claim-form-page input:focus,
 .claim-form-page textarea:focus,
 .claim-form-page select:focus {
@@ -254,6 +262,10 @@ legend {
   .contact-row,
   .dob-gender-row {
     grid-template-columns: 1fr;
+  }
+
+  .claim-form-page textarea{
+    max-width: 92%;
   }
 
 }

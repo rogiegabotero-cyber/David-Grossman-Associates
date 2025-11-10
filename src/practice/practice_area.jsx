@@ -33,7 +33,8 @@ const PracticeArea = () => {
       document.title = "David Grossman & Associates";
     };
     
-  }, [location]);
+  }, 
+  []);
 
 
   return (            

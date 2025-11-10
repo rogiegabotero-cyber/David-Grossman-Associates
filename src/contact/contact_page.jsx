@@ -3,7 +3,7 @@ import emailjs from "emailjs-com";
 import "./contact_page.css";
 import { Link } from "react-router-dom";
 import { House, ChevronsRight, Loader2 } from "lucide-react"; // <-- Added Loader2 icon
-import GameBoi from "../assets/gameboi.webp"
+import GameBoi from "../assets/rage.gif"
 
 const ContactPage = () => {
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -136,35 +136,9 @@ const ContactPage = () => {
                 style={{ position: "relative", width: "100%", height: "300px" }}
               >
                 {!mapLoaded && (
-                  <div
-                    className="map_loader"
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      textAlign: "center",
-                      backgroundColor: "rgba(255, 255, 255, 0.8)",
-                      padding: "15px 25px",
-                      borderRadius: "8px",
-                      fontWeight: "bold",
-                      zIndex: 1,
-                    }}
-                  >
-                    <div className="spinner" style={{ marginBottom: "8px" }}>
-                      <div
-                        style={{
-                          width: "30px",
-                          height: "30px",
-                          border: "4px solid #ccc",
-                          borderTop: "4px solid #333",
-                          borderRadius: "50%",
-                          animation: "spin 1s linear infinite",
-                          margin: "0 auto",
-                        }}
-                      ></div>
-                    </div>
-                    Loading map...
+                  <div className="map_loader">
+                    <div className="spinner" style={{ marginBottom: "8px" }}></div>
+                    <p>Loading map...</p>
                   </div>
                 )}
 
