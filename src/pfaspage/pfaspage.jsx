@@ -144,11 +144,8 @@ const PFASPage = () => {
           </p>
 
           <div className="pfas-ctaNote">
-            <strong>Don’t wait:</strong> Filing early helps ensure your claim is submitted before the next deadline.
+            <strong>Don’t wait:</strong> Filing early helps ensure your claim is submitted before the next deadline.It only takes a few minutes to get started.
           </div>
-          <p className="pfas-ctaSmall">
-            It only takes a few minutes to get started.
-          </p>
           <Link to="/pfasform">
             <button className="pfas-btnPrimary" onClick={handleFileClaim}>
               File a Claim
