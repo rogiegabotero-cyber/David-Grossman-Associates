@@ -54,13 +54,17 @@
 
 .R_div3 {
   display: flex;
+  flex-direction: row;
   justify-content: center;
-  margin: .25rem 0;
-  margin-bottom: .50rem;
+  gap: 2rem;
+  padding: 2%;
 }
 
 
 .direction-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   background: white;
   border: 1px solid #ddd;
   border-radius: 12px;
@@ -111,3 +115,121 @@
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
+
+/* ----- PFAS Mini Card styles (inlined into file_claim_page.css) ----- */
+.pfasMiniCard{
+  display: block;
+  text-decoration: none;
+  color: inherit;
+
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 14px;
+  background: #fff;
+  padding: 16px;
+  margin: 12px 0;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.pfasMiniCard:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+  border-color: rgba(0,0,0,0.18);
+}
+
+.pfasMiniTop{
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pfasMiniTitle{
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.pfasMiniDesc{
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  opacity: 0.9;
+}
+
+.pfasMiniUrgency{
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.pfasMiniBadge{
+  background: #EF4524;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.pfasMiniDeadline{
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0.95;
+}
+
+.pfasMiniImgWrap{
+  flex: 0 0 auto;
+  width: 92px;
+  height: 72px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.10);
+  background: #f5f7fb;
+}
+
+.pfasMiniImg{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pfasMiniActions{
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pfasMiniPrimary{
+  font-weight: 800;
+  color: #EF4524;
+}
+
+.pfasMiniSecondary{
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+@media (max-width: 600px){
+  .R_div3{
+    display: flex;
+    flex-direction: column;
+  }
+  .pfasMiniTop{
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  }
+  .pfasMiniImgWrap{
+    width: 100%;
+    height: 140px;
+  }
+  .pfasMiniActions{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+

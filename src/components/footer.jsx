@@ -38,12 +38,13 @@ const footer = () => {
                 <Link to="/contact_page">Contact Us</Link>
             </div>
             <div className='second'>
+                <h2>Practice Areas</h2>
                 <Link id='link1' to="/practice_area#sample1">
                     Antitrust: Insulin Price-Fixing 
                 </Link>
-                <Link id='link2' to="/practice_area#sample2">
+                {/* <Link id='link2' to="/practice_area#sample2">
                     Antitrust: Generic Drug Price Fixing
-                </Link>
+                </Link> */}
                 <Link id='link3' to="/practice_area#sample4">
                     Social Media Harm 
                 </Link>
@@ -55,11 +56,8 @@ const footer = () => {
             <div className='second'>
                 <h2>Get in Touch</h2>
                 <a href="">(631) 815-2575</a>
-                <a href="">david@davidgross <br />manandassociates.com</a>
+                <a href="">david@davidgross manandassociates.com</a>
                 <a href="">881 OCEAN DRIVE, UNIT 14H, KEY <br /> BISCAYNE, FLORIDA 33149 </a>
-            </div>
-            <div>
-
             </div>
             <div>
 
@@ -67,7 +65,7 @@ const footer = () => {
             
         </div>
         <div className='rights'>
-            <p>Copyright © 2025 All Rights Reserved</p>
+            <p>Copyright © 2026 All Rights Reserved</p>
         </div>
     </div>
   )

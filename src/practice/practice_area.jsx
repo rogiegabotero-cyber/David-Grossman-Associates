@@ -73,7 +73,7 @@ const PracticeArea = () => {
           </div>
         </div>
 
-        <div className='sample_div' id='sample2'>
+        {/* <div className='sample_div' id='sample2'>
           <div>
             <h2>Antitrust: Generic Drug Price Fixing</h2>
             <p>
@@ -92,10 +92,10 @@ const PracticeArea = () => {
             </p>
           </div>
           <img src={Sample2} alt="" />
-        </div>
+        </div> */}
 
         <div className='sample_div' id='sample3'>
-          <img src={Sample4} alt="" />
+          
           <div>
             <h2>Environmental case: PFAS</h2>
             <p>
@@ -115,9 +115,12 @@ const PracticeArea = () => {
               threatened contamination of their water systems with PFAS.
             </p>
           </div>
+
+          <img src={Sample4} alt="" />
         </div>
 
         <div className='sample_div' id='sample4'>
+          <img src={Sample3} alt="" />
           <div>
             <h2>Social Media Harm</h2>
             <p>
@@ -146,7 +149,7 @@ const PracticeArea = () => {
               ✔️ Lack of labels on filtered images and videos and Intrusive notification timing designed to lure users back to the platforms
             </p>
           </div>
-          <img src={Sample3} alt="" />
+          
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import emailjs from "emailjs-com";
 import { Loader2 } from "lucide-react";
 import "./claim_form.css";
@@ -22,6 +23,9 @@ const ClaimForm = () => {
   const [claimantZip, setClaimantZip] = useState("");
   const [claimantPhone, setClaimantPhone] = useState("");
   const [claimantEmail, setClaimantEmail] = useState("");
+  const [showEmailPopup, setShowEmailPopup] = useState(false); 
+  const [emailToConfirm, setEmailToConfirm] = useState(""); 
+  const navigate = useNavigate();
 
   const collectCheckedValues = () => {
   const fields = [
@@ -145,14 +149,29 @@ useEffect(() => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  //  Validate email with regex
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  //  Intercept Submit and show popup
+  const handleInitialSubmit = (e) => {
     e.preventDefault();
+    if (!isValidEmail(contactData.email)) {
+      alert("Please enter a valid email address before proceeding.");
+      return;
+    }
+    setEmailToConfirm(contactData.email);
+    setShowEmailPopup(true); // show popup instead of sending
+  };
+
+  //  Proceed with sending after popup confirmation
+  const handleConfirmAndSend = () => {
     setIsSending(true);
+    setShowEmailPopup(false);
 
-    // ✅ Collect all checkbox values into hidden fields
-    collectCheckedValues();
+    collectCheckedValues(); 
 
-    // If Claimant_Date_of_Death is empty, set it to "NA"
     const deathDateField = form.current.querySelector('input[name="Claimant_Date_of_Death"]');
     if (deathDateField && !deathDateField.value.trim()) {
       deathDateField.value = "NA";
@@ -167,40 +186,7 @@ useEffect(() => {
       )
       .then(
         () => {
-          alert("Form submitted successfully!");
-          form.current.reset();
-          setIsSending(false);
-          
-          setClaimantFirstName(""); 
-          setClaimantMiddleName(""); 
-          setClaimantLastName(""); 
-          setClaimantSuffix(""); 
-          setClaimantStreet(""); 
-          setClaimantCity(""); 
-          setClaimantState(""); 
-          setClaimantZip(""); 
-          setClaimantPhone(""); 
-          setClaimantEmail("");
-
-          setContactData({ 
-            firstName: "", 
-            middleName: "", 
-            lastName: "", 
-            suffix: "", 
-            street: "", 
-            city: "", 
-            state: "", 
-            zip: "", 
-            phone: "", 
-            email: "" 
-          }); 
-
-          setClaimantDOB(""); 
-          setContactRelation(""); 
-          setDisclaimerAccepted(false); 
-          setIsSending(false);
-
-          
+          navigate("/form-processing", { state: { contactEmail: contactData.email } });
         },
         (error) => {
           console.error(error);
@@ -210,9 +196,62 @@ useEffect(() => {
       );
   };
 
+  //  Handle actual form submit
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleInitialSubmit(e);
+  };
+
   return (
     <div className="claim-form-page">
       <h2>Video Game Claim Questionnaire</h2>
+
+      {/*  Popup Container */}
+      {showEmailPopup && (
+        <div className="email-popup-overlay">
+          <div className="email-popup">
+            <h3>Confirm Your Email</h3>
+            <p>Please make sure that you have provided a valid email address to receive the Retainer.</p>
+            <label>
+              Proceed using this email:
+              <input
+                type="email"
+                value={emailToConfirm}
+                onChange={(e) => {
+                  setEmailToConfirm(e.target.value);
+                  setContactData((prev) => ({ ...prev, email: e.target.value })); // real-time sync
+                }}
+              />
+            </label>
+            
+            <div className="popup-buttons">
+              <button
+                className="cancel_btn"
+                onClick={() => setShowEmailPopup(false)}
+                disabled={isSending}
+                id="cancel_btn"
+              >
+                Cancel
+              </button>
+              <button
+                className="proceed_btn"
+                onClick={handleConfirmAndSend}
+                disabled={isSending || !isValidEmail(emailToConfirm)}
+                id="proceed_btn"
+              >
+                {isSending ? (
+                  <>
+                    <Loader2 className="animate_spin" size={18} /> Sending...
+                  </>
+                ) : (
+                  "Proceed"
+                )}
+              </button>
+              
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="intro-text">
         <p>
@@ -312,7 +351,7 @@ useEffect(() => {
               />
             </label>
             <label>
-              <span>State *</span>
+              <span>State (Eg. NY,TX...) *</span>
               <input
                 name="Contact_State"
                 value={contactData.state}
@@ -425,7 +464,7 @@ useEffect(() => {
             />
           </label>
           <label>
-            <span>State *</span>
+            <span>State (Eg. NY,TX...) *</span>
             <input
               name="Claimant_State"
               value={claimantState}
