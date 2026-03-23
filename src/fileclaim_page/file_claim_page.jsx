@@ -44,6 +44,21 @@ const FileClaimPage = () => {
             </Link>
           </div>
 
+
+          <div className="direction-box">
+            <h3 className="direction-title">Social Media Adolescent Addiction</h3>
+            <p className="direction-text">
+              Complete the short-form complaint style questionnaire based on the court filing questions for
+              <strong> Social Media Adolescent Addiction / Personal Injury</strong>.
+            </p>
+            <div className="direction-image">
+              <img src={GameBoi} alt="Social media claim illustration" />
+            </div>
+            <Link to="/social-media-claim-form" className="claim-btn">
+              Proceed to Social Media Claim Form
+            </Link>
+          </div>
+
           <div className="direction-box">
             <h3 className="direction-title">PFAS</h3>
             <p className="direction-text">

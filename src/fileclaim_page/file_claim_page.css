@@ -58,6 +58,7 @@
   justify-content: center;
   gap: 2rem;
   padding: 2%;
+  flex-wrap: wrap;
 }
 
 
@@ -69,7 +70,8 @@
   border: 1px solid #ddd;
   border-radius: 12px;
   padding: 2rem;
-  max-width: 500px;
+  max-width: 420px;
+  flex: 1 1 320px;
   text-align: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
