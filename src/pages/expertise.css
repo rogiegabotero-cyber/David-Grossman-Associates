@@ -81,6 +81,7 @@
 
     .main{
         z-index: 999999;
+        margin: 0;
     }
 
 
@@ -90,6 +91,7 @@
     justify-content: center;
     text-align: left;
     font-size: 18px;
+    margin: 0;
     
 }
 

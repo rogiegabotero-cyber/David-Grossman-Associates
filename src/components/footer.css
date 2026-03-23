@@ -141,10 +141,17 @@
     .bot_div{
         flex-direction: column;
         gap: 2rem;
+        padding: 0;
     }
 
-    .footer_div{
+    .footer_div div, .top-div div{
         padding-top: 5%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .footer_div p, .footer_div h1 , .top-div h1, .top-div p{
+        text-align: center;
     }
 
     .footer_div2 {
@@ -154,14 +161,9 @@
 
     .footer_div2 div {
         flex-direction: column;
-        margin-left: 5%;
     }
     .rights{
         margin: 0;
-    }
-
-    .bot_div div{
-        margin-left: 10%;
     }
 
     .logo_div h1{
@@ -176,5 +178,8 @@
         gap: 1rem;
     }
 
+    .inf_l P {
+        margin: 0;
+    }
 
 }

@@ -285,15 +285,16 @@ border: 1px solid #EF4524;
 
     .contact-info p {
         padding: 0;
-        margin: 5px;
         font-size: inherit;
+        margin: 0;
     }
 
     .top_header{
         display: flex;
         flex-direction: row; 
         height: auto;
-        padding: 3%;
+        padding: 0;
+        justify-content: space-around;
     }
 
     .social-icons {
@@ -310,6 +311,7 @@ border: 1px solid #EF4524;
         align-items: center;
         height: 4rem;
         z-index: 1200; /* lower than burger */
+        padding: 0;
     }
 
     .burger {
