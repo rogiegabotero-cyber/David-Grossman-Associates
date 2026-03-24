@@ -308,17 +308,188 @@ const SocialMediaClaimForm = () => {
   );
 
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const hasValue = (value) => String(value ?? "").trim().length > 0;
 
   const handleInitialSubmit = (e) => {
     e.preventDefault();
 
+    const validationErrors = [];
+
     if (!isValidEmail(contactInfo.intakeEmail)) {
-      alert("Please enter a valid email address before proceeding.");
-      return;
+      validationErrors.push("Response Contact: Enter a valid email address.");
+    }
+
+    const incompleteOtherDefendantRows = formData.otherDefendants
+      .map((entry, index) => {
+        const hasName = hasValue(entry.name);
+        const hasCitizenship = hasValue(entry.citizenship);
+        return hasName !== hasCitizenship ? index + 1 : null;
+      })
+      .filter(Boolean);
+
+    const hasDirectFiledDistrict = hasValue(formData.directFiledDistrict);
+    const hasTransferredDistrict = hasValue(formData.transferredDistrict);
+    const hasTransferredDate = hasValue(formData.transferredDate);
+    if (!hasDirectFiledDistrict && !hasTransferredDistrict && !hasTransferredDate) {
+      validationErrors.push(
+        "Question 1/2: Provide either the direct-filed district (Q1), or transferred district and filing date (Q2)."
+      );
+    }
+    if (hasTransferredDistrict !== hasTransferredDate) {
+      validationErrors.push(
+        "Question 2: Both transferred district and transferred filing date are required when this section is used."
+      );
+    }
+
+    if (!hasValue(formData.plaintiffName)) {
+      validationErrors.push("Question 3: Plaintiff name is required.");
+    }
+
+    if (!hasValue(formData.ageAtFiling)) {
+      validationErrors.push("Question 4: Age at time of filing is required.");
+    }
+
+    if (!hasValue(formData.platformCitiesStates)) {
+      validationErrors.push("Question 5: City(ies) and state(s) of primary platform use are required.");
+    }
+
+    if (!hasValue(formData.residentState)) {
+      validationErrors.push("Question 9: Resident/citizenship state is required.");
+    }
+
+    const q8HasAnyValue =
+      hasValue(formData.decedentInfo) ||
+      hasValue(formData.decedentDeathDate) ||
+      hasValue(formData.wrongfulDeathRepresentative);
+    if (q8HasAnyValue) {
+      if (!hasValue(formData.decedentInfo)) {
+        validationErrors.push("Question 8(a): Decedent name and state are required once Question 8 is started.");
+      }
+      if (!hasValue(formData.decedentDeathDate)) {
+        validationErrors.push("Question 8(b): Decedent date of death is required once Question 8 is started.");
+      }
+      if (!hasValue(formData.wrongfulDeathRepresentative)) {
+        validationErrors.push(
+          "Question 8(c): Wrongful-death representative name/capacity is required once Question 8 is started."
+        );
+      }
+    }
+
+    const hasSelectedDefendant = Object.values(selectedDefendants).some(Boolean);
+    const completeOtherDefendantRows = formData.otherDefendants
+      .map((entry, index) =>
+        hasValue(entry.name) && hasValue(entry.citizenship) ? String(index + 1) : null
+      )
+      .filter(Boolean);
+    if (!hasSelectedDefendant && completeOtherDefendantRows.length === 0) {
+      validationErrors.push(
+        "Question 10: Select at least one listed defendant or provide at least one complete Other Defendant row."
+      );
+    }
+
+    if (incompleteOtherDefendantRows.length > 0) {
+      validationErrors.push(
+        `Question 10: Complete both Name and Citizenship for Other Defendant row(s): ${incompleteOtherDefendantRows.join(
+          ", "
+        )}, or clear those rows.`
+      );
+    }
+
+    const selectedProductKeys = PRODUCT_KEYS.filter((key) => formData.products[key].selected);
+    if (selectedProductKeys.length === 0 && !hasValue(formData.otherProducts)) {
+      validationErrors.push(
+        "Question 11: Select at least one social media product or complete the OTHER product field."
+      );
+    }
+
+    PRODUCT_KEYS.forEach((key) => {
+      const product = formData.products[key];
+      const label = PRODUCT_LABELS[key];
+      const hasFrom = hasValue(product.from);
+      const hasTo = hasValue(product.to);
+
+      if (product.selected && (!hasFrom || !hasTo)) {
+        validationErrors.push(`Question 11 (${label}): Both start and end dates are required when selected.`);
+      }
+
+      if (!product.selected && (hasFrom || hasTo)) {
+        validationErrors.push(
+          `Question 11 (${label}): Check the product first, or clear the dates entered for that product.`
+        );
+      }
+
+      if (hasFrom && hasTo && product.from > product.to) {
+        validationErrors.push(
+          `Question 11 (${label}): End date must be the same as or later than the start date.`
+        );
+      }
+    });
+
+    const hasInjuryResponse =
+      formData.injuries.length > 0 ||
+      hasValue(formData.injuryEatingOther) ||
+      hasValue(formData.injurySelfHarmOther) ||
+      hasValue(formData.injuryPhysicalOther);
+    if (!hasInjuryResponse) {
+      validationErrors.push(
+        "Question 12: Select at least one injury option or provide details in an injury Other field."
+      );
+    }
+
+    let hasAnyCauseSelection = false;
+    const completeOtherRowSet = new Set(completeOtherDefendantRows);
+    CAUSES.forEach((cause) => {
+      const current = formData.causes[cause.count];
+      const countIsMetaOnly = cause.count === 8 || cause.count === 9;
+      const hasEntitySelection =
+        current.meta || (!countIsMetaOnly && (current.snap || current.tiktok || current.google));
+      const hasOtherRowRefs = hasValue(current.otherDefendants);
+
+      if (hasEntitySelection || hasOtherRowRefs) {
+        hasAnyCauseSelection = true;
+      }
+
+      if (cause.count === 7 && (hasEntitySelection || hasOtherRowRefs) && !hasValue(current.statute)) {
+        validationErrors.push("Question 13 (Count 7): Identify applicable state statute(s).");
+      }
+
+      if (hasOtherRowRefs) {
+        const refs = current.otherDefendants
+          .split(",")
+          .map((value) => value.trim())
+          .filter(Boolean);
+
+        const hasInvalidRefFormat = refs.some((value) => !/^\d+$/.test(value));
+        if (hasInvalidRefFormat) {
+          validationErrors.push(
+            `Question 13 (Count ${cause.count}): Other Defendant(s) must be row numbers (for example: 1, 2).`
+          );
+          return;
+        }
+
+        const missingRows = refs.filter((value) => !completeOtherRowSet.has(value));
+        if (missingRows.length > 0) {
+          validationErrors.push(
+            `Question 13 (Count ${cause.count}): Referenced Other Defendant row(s) must be fully completed in Question 10: ${missingRows.join(
+              ", "
+            )}.`
+          );
+        }
+      }
+    });
+
+    if (!hasAnyCauseSelection) {
+      validationErrors.push("Question 13: Select at least one cause-of-action row and who it is asserted against.");
     }
 
     if (!formData.disclaimerAccepted) {
-      alert("Please accept the consent and authorization section before proceeding.");
+      validationErrors.push("Consent and Authorization: This checkbox is required.");
+    }
+
+    if (validationErrors.length > 0) {
+      alert(
+        `Please complete the required items before proceeding:\n\n- ${validationErrors.join("\n- ")}`
+      );
       return;
     }
 
@@ -616,7 +787,10 @@ const SocialMediaClaimForm = () => {
           </div>
 
           <div className="social-other-defendants">
-            <h4>OTHER DEFENDANTS</h4>
+            <h4>OTHER DEFENDANTS (OPTIONAL)</h4>
+            <p className="social-optional-note">
+              Optional: Leave these fields blank if there are no additional defendants.
+            </p>
             <p>
               For each “Other Defendant” Plaintiff(s) contend(s) are additional parties and are liable or responsible
               for Plaintiff(s) damages alleged herein, Plaintiffs must identify by name each Defendant and its

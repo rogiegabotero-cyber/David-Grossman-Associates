@@ -4,6 +4,7 @@ import "./file_claim_page.css";
 import { House, ChevronsRight } from "lucide-react";
 import GameBoi from "../assets/gameboi.webp";
 import Pfas from "../assets/pfas.webp";
+import Social from "../assets/mam.webp";
 
 const FileClaimPage = () => {
   useEffect(() => {
@@ -41,21 +42,6 @@ const FileClaimPage = () => {
             </div>
             <Link to="/claim-form" className="claim-btn">
               Proceed to Video Game Addiction Form
-            </Link>
-          </div>
-
-
-          <div className="direction-box">
-            <h3 className="direction-title">Social Media Adolescent Addiction</h3>
-            <p className="direction-text">
-              Complete the short-form complaint style questionnaire based on the court filing questions for
-              <strong> Social Media Adolescent Addiction / Personal Injury</strong>.
-            </p>
-            <div className="direction-image">
-              <img src={GameBoi} alt="Social media claim illustration" />
-            </div>
-            <Link to="/social-media-claim-form" className="claim-btn">
-              Proceed to Social Media Claim Form
             </Link>
           </div>
 
@@ -127,6 +113,20 @@ const FileClaimPage = () => {
             {/* Optional: keep a direct form button too */}
             <Link to="/pfasform" className="claim-btn">
               Go straight to PFAS Form
+            </Link>
+          </div>
+
+          <div className="direction-box">
+            <h3 className="direction-title">Social Media Adolescent Addiction</h3>
+            <p className="direction-text">
+              Complete the short-form complaint style questionnaire based on the court filing questions for
+              <strong> Social Media Adolescent Addiction / Personal Injury</strong>.
+            </p>
+            <div className="direction-image">
+              <img src={Social} alt="Social media claim illustration" />
+            </div>
+            <Link to="/social-media-claim-form" className="claim-btn">
+              Proceed to Social Media Claim Form
             </Link>
           </div>
 
