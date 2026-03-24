@@ -13,11 +13,6 @@ const team = () => {
           <strong>David Grossman, Esq.</strong>
           <p>David Grossman &amp; Associates PLLC</p>
         </div>
-        <div className='bartlett'>
-          <img src={Bartlett} alt="David Grossman profile" />
-          <strong>Kenneth G. Bartlett</strong>
-          <p>Bartlett Law Offices, P.C.</p>
-        </div>
       </div>
       
         
