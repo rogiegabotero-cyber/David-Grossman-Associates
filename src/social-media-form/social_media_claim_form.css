@@ -1,0 +1,605 @@
+.social-media-claim-page {
+  width: min(100%, 900px);
+  margin-top: 30px;
+  margin-bottom: 60px;
+  padding: clamp(14px, 2.8vw, 30px);
+  box-sizing: border-box;
+  overflow-x: clip;
+}
+
+.social-media-claim-page * {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.social-media-claim-page h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.social-media-claim-page h3 {
+  overflow-wrap: anywhere;
+}
+
+.social-media-claim-page fieldset {
+  padding: clamp(12px, 2.2vw, 20px);
+}
+
+.social-media-claim-page legend,
+.social-media-claim-page label span {
+  overflow-wrap: anywhere;
+}
+
+.social-media-claim-page textarea {
+  width: 100%;
+  max-width: 100%;
+}
+
+.social-media-claim-page input[type="text"],
+.social-media-claim-page input[type="email"],
+.social-media-claim-page input[type="tel"],
+.social-media-claim-page input[type="number"],
+.social-media-claim-page input[type="date"] {
+  width: 100%;
+}
+
+.social-form-topnav {
+  margin-bottom: 16px;
+}
+
+.social-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #ef4524;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.social-back-link:hover {
+  text-decoration: underline;
+}
+
+.social-subsection-title {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.social-defendant-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.social-defendant-card,
+.social-note-box {
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.social-defendant-card h4,
+.social-other-defendants h4,
+.social-injury-group h4 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #ef4524;
+}
+
+.social-other-defendants {
+  margin-top: 22px;
+}
+
+.social-optional-note {
+  margin: 0 0 10px;
+  color: #4b5563;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.social-other-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 14px 0 8px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.social-other-row {
+  margin-bottom: 8px;
+}
+
+.social-product-row {
+  border-bottom: 1px solid #ececec;
+  padding: 12px 0;
+}
+
+.social-product-row:last-child {
+  border-bottom: none;
+}
+
+.social-product-toggle {
+  margin-bottom: 10px;
+}
+
+.social-injury-group {
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid #ececec;
+  border-radius: 10px;
+  background: #fff;
+}
+
+/* Causes table */
+
+.social-causes-fieldset {
+  padding: 18px;
+  overflow-x: visible;
+}
+
+.social-causes-intro {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+
+.social-causes-question-number {
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.6;
+}
+
+.social-causes-intro p {
+  margin: 0;
+  line-height: 1.7;
+  color: #1f2937;
+}
+
+.social-causes-table-wrap {
+  overflow-x: visible;
+  border: 1px solid #4b5563;
+  background: #fff;
+}
+
+.social-causes-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+  min-width: 0;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.social-causes-table th,
+.social-causes-table td {
+  border: 1px solid #4b5563;
+  vertical-align: top;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.social-causes-table th {
+  background: #d9d9d9;
+  color: #111827;
+  font-weight: 700;
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 16px;
+}
+
+.social-causes-table th:nth-child(1) {
+  width: 28%;
+}
+
+.social-causes-table th:nth-child(2) {
+  width: 10%;
+  text-align: center;
+}
+
+.social-causes-table th:nth-child(3) {
+  width: 62%;
+  text-align: center;
+}
+
+.social-causes-against-cell {
+  padding: 8px 10px 10px;
+  text-align: center;
+}
+
+.social-causes-count-cell {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 400;
+  padding: 10px 6px;
+  line-height: 1;
+  white-space: nowrap;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.social-causes-title-cell {
+  padding: 10px 12px;
+}
+
+.social-causes-title-text {
+  font-size: 18px;
+  line-height: 1.25;
+  color: #111827;
+  word-break: break-word;
+}
+
+.social-table-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-size: 16px;
+  line-height: 1.2;
+  color: #111827;
+}
+
+.social-table-checkbox input[type="checkbox"] {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.social-other-def-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  padding-left: 2px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.social-other-def-inline > span {
+  flex-shrink: 0;
+}
+
+.social-other-def-inline span {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.social-other-def-inline input {
+  border: 1px solid #9ca3af;
+  border-radius: 6px;
+  background: #fff;
+  padding: 6px 8px;
+  width: min(100%, clamp(96px, 24vw, 260px)) !important;
+  min-width: 96px;
+  max-width: 100%;
+  flex: 0 1 clamp(96px, 24vw, 260px);
+  font-size: 15px;
+  color: #111827;
+  box-shadow: inset 0 1px 2px rgba(17, 24, 39, 0.08);
+}
+
+.social-other-def-inline input:focus {
+  outline: none;
+  border-color: #ef4524;
+  box-shadow: 0 0 0 3px rgba(239, 69, 36, 0.14);
+}
+
+.social-statute-line {
+  margin-top: 18px;
+}
+
+.social-statute-line label {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.social-statute-line span {
+  font-style: italic;
+  font-size: 16px;
+}
+
+.social-statute-line input {
+  flex: 1;
+  min-width: 220px;
+  border: 1px solid #9ca3af;
+  border-radius: 6px;
+  background: #fff;
+  padding: 6px 8px;
+  min-height: 34px;
+  color: #111827;
+  box-shadow: inset 0 1px 2px rgba(17, 24, 39, 0.08);
+}
+
+.social-statute-line input:focus {
+  outline: none;
+  border-color: #ef4524;
+  box-shadow: 0 0 0 3px rgba(239, 69, 36, 0.14);
+}
+
+.social-causes-footnotes {
+  margin-top: 14px;
+  font-family: "Times New Roman", Times, serif;
+  color: #111827;
+}
+
+.social-causes-footnotes p {
+  margin: 6px 0;
+  line-height: 1.4;
+  font-size: 15px;
+}
+
+.social-note-box {
+  margin-bottom: 16px;
+  background: #fffdf8;
+}
+
+.social-note-box strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+.social-note-box p {
+  margin: 0;
+  line-height: 1.7;
+  color: #374151;
+}
+
+.social-media-claim-page .email-popup {
+  width: min(92vw, 440px);
+  max-width: 440px;
+  max-height: 90vh;
+  height: auto;
+  padding: 1.5rem;
+  gap: 1rem;
+  overflow-y: auto;
+}
+
+.social-media-claim-page .email-popup input {
+  width: 100%;
+  margin: 0;
+}
+
+.social-media-claim-page .popup-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.social-media-claim-page .cancel_btn,
+.social-media-claim-page .proceed_btn {
+  color: #fff;
+  border: 1px solid transparent;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  margin: 0;
+}
+
+.social-media-claim-page .cancel_btn {
+  background-color: #525252;
+  border-color: #525252;
+}
+
+.social-media-claim-page .proceed_btn {
+  background-color: #ef4524;
+  border-color: #ef4524;
+}
+
+.social-media-claim-page .cancel_btn:hover {
+  background-color: #fff;
+  color: #525252;
+}
+
+.social-media-claim-page .proceed_btn:hover {
+  background-color: #f0f0f0;
+  color: #ef4524;
+}
+
+.social-media-claim-page .cancel_btn:disabled,
+.social-media-claim-page .proceed_btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 1024px) {
+  .social-media-claim-page {
+    margin-bottom: 44px;
+  }
+
+  .social-media-claim-page .contact-row {
+    grid-template-columns: 1fr;
+  }
+
+  .social-causes-table {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .social-media-claim-page {
+    width: calc(100% - 20px);
+    margin-top: 16px;
+    margin-bottom: 36px;
+    padding: 12px;
+  }
+
+  .social-form-topnav {
+    margin-bottom: 10px;
+  }
+
+  .social-defendant-groups {
+    grid-template-columns: 1fr;
+  }
+
+  .social-product-dates,
+  .social-other-row {
+    grid-template-columns: 1fr;
+  }
+
+  .social-other-header {
+    display: none;
+  }
+
+  .social-other-row {
+    border: 1px solid #ececec;
+    border-radius: 8px;
+    padding: 10px;
+    background: #fff;
+  }
+
+  .social-other-row label span {
+    font-size: 12px;
+    letter-spacing: 0.02em;
+  }
+
+  .social-causes-intro {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .social-causes-fieldset {
+    padding: 12px;
+  }
+
+  .social-causes-table-wrap {
+    overflow-x: visible;
+  }
+
+  .social-causes-table {
+    min-width: 0;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .social-causes-table th,
+  .social-causes-table td {
+    padding: 8px;
+    max-width: 0;
+  }
+
+  .social-causes-table th:nth-child(1) {
+    width: 32%;
+  }
+
+  .social-causes-table th:nth-child(2) {
+    width: 20%;
+  }
+
+  .social-causes-table th:nth-child(3) {
+    width: 48%;
+  }
+
+  .social-causes-title-cell,
+  .social-causes-title-text {
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .social-causes-title-cell .social-statute-line label {
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .social-causes-title-cell .social-statute-line input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .social-causes-title-text {
+    font-size: 15px;
+    line-height: 1.3;
+  }
+
+  .social-causes-count-cell {
+    width: 20%;
+    min-width: 20%;
+    max-width: 20%;
+    padding: 8px 4px;
+    font-size: clamp(18px, 4.8vw, 24px);
+  }
+
+  .social-table-checkbox {
+    font-size: 14px;
+  }
+
+  .social-other-def-inline input {
+    width: min(100%, clamp(84px, 34vw, 190px)) !important;
+    min-width: 84px;
+    flex-basis: clamp(84px, 34vw, 190px);
+  }
+}
+
+@media (max-width: 560px) {
+  .social-defendant-card,
+  .social-note-box,
+  .social-injury-group {
+    padding: 12px;
+  }
+
+  .social-product-row {
+    padding: 10px 0;
+  }
+
+  .social-causes-table {
+    min-width: 0;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .social-causes-count-cell {
+    width: 20%;
+    min-width: 20%;
+    max-width: 20%;
+    font-size: clamp(16px, 5.2vw, 20px);
+    padding: 8px 4px;
+  }
+
+  .social-causes-table th {
+    font-size: 14px;
+    padding: 8px 6px;
+  }
+
+  .social-causes-table th:nth-child(1) {
+    width: 30%;
+  }
+
+  .social-causes-table th:nth-child(2) {
+    width: 20%;
+  }
+
+  .social-causes-table th:nth-child(3) {
+    width: 50%;
+  }
+
+  .social-other-def-inline {
+    flex-wrap: nowrap;
+  }
+
+  .social-media-claim-page .social-other-def-inline input {
+    width: min(100%, clamp(72px, 42vw, 150px)) !important;
+    min-width: 72px;
+    flex: 0 1 clamp(72px, 42vw, 150px);
+  }
+
+  .social-media-claim-page .popup-buttons {
+    grid-template-columns: 1fr;
+  }
+}
