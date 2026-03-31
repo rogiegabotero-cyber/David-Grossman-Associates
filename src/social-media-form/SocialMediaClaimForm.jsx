@@ -15,6 +15,17 @@ const CONDITION_OPTIONS = [
 ];
 const BEFORE_OPTIONS = ["No issues", "Mild", "Significant"];
 const AFTER_OPTIONS = ["Worse", "Same"];
+const RELATIONSHIP_OPTIONS = [
+  "Mother",
+  "Father",
+  "Guardian",
+  "Brother",
+  "Sister",
+  "Grandparent",
+  "Aunt",
+  "Uncle",
+  "Other",
+];
 
 const getTodayIsoDate = () => new Date().toISOString().split("T")[0];
 
@@ -23,7 +34,8 @@ const buildInitialData = () => ({
   contactPhone: "",
   signedDate: getTodayIsoDate(),
   clientEntityName: "",
-  authorizedRepresentativeNameTitle: "",
+  authorizedRepresentativeName: "",
+  authorizedRepresentativeRelationship: "",
   authorizedRepresentativeBy: "",
   coCounsel: "",
   counselAddress: "",
@@ -160,6 +172,23 @@ const SocialMediaClaimForm = () => {
 
     handleChange(field, sanitizePhoneInput(merged));
   };
+  const formatPrintedName = (value) => String(value ?? "").toUpperCase();
+  const formatTitleCaseName = (value) =>
+    String(value ?? "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase()
+      .replace(/\b([a-z])/g, (_, char) => char.toUpperCase());
+  const handleClientFullNameChange = (value) => {
+    const printedName = formatPrintedName(value);
+    const titleCaseName = formatTitleCaseName(printedName);
+
+    setFormData((prev) => ({
+      ...prev,
+      clientEntityName: printedName,
+      fullName: titleCaseName,
+    }));
+  };
   const isValidPhone = (phone) => {
     const normalized = String(phone ?? "").trim();
     if (!/^\+?[0-9().\-\s]+$/.test(normalized)) return false;
@@ -238,6 +267,15 @@ const SocialMediaClaimForm = () => {
     return { day, month, year };
   }, [formData.signedDate]);
 
+  const dateOfBirthFormatted = useMemo(() => {
+    if (!formData.dateOfBirth) {
+      return "";
+    }
+
+    const [year = "", month = "", day = ""] = formData.dateOfBirth.split("-");
+    return day && month && year ? `${day}/${month}/${year}` : "";
+  }, [formData.dateOfBirth]);
+
   const submitIntake = async () => {
     try {
       setIsSending(true);
@@ -268,10 +306,12 @@ const SocialMediaClaimForm = () => {
     const claimantAge = calculateAgeFromDateOfBirth(formData.dateOfBirth);
 
     if (!hasValue(formData.clientEntityName)) errors.push("Client entity name is required.");
-    if (!hasValue(formData.authorizedRepresentativeNameTitle)) {
-      errors.push("Authorized representative name/title is required.");
+    if (!hasValue(formData.authorizedRepresentativeName)) {
+      errors.push("Authorized representative name is required.");
     }
-    if (!hasValue(formData.authorizedRepresentativeBy)) errors.push("BY is required.");
+    if (!hasValue(formData.authorizedRepresentativeRelationship)) {
+      errors.push("Authorized representative relationship is required.");
+    }
     if (!hasValue(formData.signedDate)) errors.push("Signed date is required.");
 
     if (!hasValue(contactEmailForReview) || !isValidEmail(contactEmailForReview)) {
@@ -373,12 +413,12 @@ const SocialMediaClaimForm = () => {
             <div className="signature-grid-row">
               <div className="signature-grid-cell">
                 <label>
-                  <span>Please print Client Entity Name:</span>
+                  <span>Client Full Name:</span>
                   <input
                     type="text"
                     name="client_entity_name"
                     value={formData.clientEntityName}
-                    onChange={(e) => handleChange("clientEntityName", e.target.value)}
+                    onChange={(e) => handleClientFullNameChange(e.target.value)}
                     required
                   />
                 </label>
@@ -391,16 +431,32 @@ const SocialMediaClaimForm = () => {
             <div className="signature-grid-row">
               <div className="signature-grid-cell">
                 <label>
-                  <span>Print Name &amp; Title of Authorized Representative:</span>
-                  <input
-                    type="text"
-                    name="authorized_representative_name_title"
-                    value={formData.authorizedRepresentativeNameTitle}
-                    onChange={(e) =>
-                      handleChange("authorizedRepresentativeNameTitle", e.target.value)
-                    }
-                    required
-                  />
+                  <span>Authorized Representative | Relationship:</span>
+                  <div className="authorized-rep-split">
+                    <input
+                      type="text"
+                      name="authorized_representative_name"
+                      value={formData.authorizedRepresentativeName}
+                      onChange={(e) => handleChange("authorizedRepresentativeName", e.target.value)}
+                      placeholder="Authorized Representative"
+                      required
+                    />
+                    <select
+                      name="authorized_representative_relationship"
+                      value={formData.authorizedRepresentativeRelationship}
+                      onChange={(e) =>
+                        handleChange("authorizedRepresentativeRelationship", e.target.value)
+                      }
+                      required
+                    >
+                      <option value="">Relationship</option>
+                      {RELATIONSHIP_OPTIONS.map((relationship) => (
+                        <option key={relationship} value={relationship}>
+                          {relationship}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </label>
               </div>
               <div className="signature-grid-cell signature-grid-empty" />
@@ -410,13 +466,12 @@ const SocialMediaClaimForm = () => {
               <div className="signature-grid-cell signature-grid-empty" />
               <div className="signature-grid-cell">
                 <label>
-                  <span>BY:</span>
+                  <span>Partner Lawyer:</span>
                   <input
                     type="text"
                     name="authorized_representative_by"
                     value={formData.authorizedRepresentativeBy}
                     onChange={(e) => handleChange("authorizedRepresentativeBy", e.target.value)}
-                    required
                   />
                 </label>
               </div>
@@ -552,7 +607,7 @@ const SocialMediaClaimForm = () => {
                 type="text"
                 name="full_name"
                 value={formData.fullName}
-                onChange={(e) => handleChange("fullName", e.target.value)}
+                readOnly
                 required
               />
             </label>
@@ -562,7 +617,6 @@ const SocialMediaClaimForm = () => {
                 <span>Date of Birth</span>
                 <input
                   type="date"
-                  name="date_of_birth"
                   value={formData.dateOfBirth}
                   onChange={(e) => handleDateOfBirthChange(e.target.value)}
                   max={todayIsoDate}
@@ -854,6 +908,7 @@ const SocialMediaClaimForm = () => {
         </div>
 
         <input type="hidden" name="submission_date" value={new Date().toLocaleString()} />
+        <input type="hidden" name="date_of_birth" value={dateOfBirthFormatted} />
         <input type="hidden" name="signed_day" value={signedDateParts.day} />
         <input type="hidden" name="signed_month" value={signedDateParts.month} />
         <input type="hidden" name="signed_year" value={signedDateParts.year} />

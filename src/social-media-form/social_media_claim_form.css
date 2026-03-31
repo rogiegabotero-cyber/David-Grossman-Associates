@@ -218,6 +218,47 @@
   font-size: 15px;
 }
 
+.authorized-rep-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 155px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.authorized-rep-split:focus-within {
+  border-color: #ef4524;
+  box-shadow: 0 0 0 4px rgba(239, 69, 36, 0.12);
+}
+
+.authorized-rep-split input,
+.authorized-rep-split select {
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin: 0;
+}
+
+.authorized-rep-split input:focus,
+.authorized-rep-split select:focus {
+  outline: none;
+}
+
+.authorized-rep-split select {
+  border-left: 2px solid #111827 !important;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #111827 50%),
+    linear-gradient(135deg, #111827 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) calc(50% - 2px),
+    calc(100% - 14px) calc(50% - 2px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 36px;
+}
+
 .signature-grid-static-text {
   display: flex;
   align-items: center;
@@ -429,6 +470,15 @@
   .signature-grid-row,
   .signature-inline-date-inputs {
     grid-template-columns: 1fr;
+  }
+
+  .authorized-rep-split {
+    grid-template-columns: 1fr;
+  }
+
+  .authorized-rep-split select {
+    border-left: none !important;
+    border-top: 1px solid #d1d5db !important;
   }
 
   .signature-grid-cell + .signature-grid-cell {
