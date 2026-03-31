@@ -1,170 +1,91 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import emailjs from "emailjs-com";
-import { ArrowLeft, Loader2 } from "lucide-react";
-import "../vga-form/claim_form.css";
+import { Loader2 } from "lucide-react";
 import "./social_media_claim_form.css";
 
-const DEFENDANT_GROUPS = [
-  {
-    key: "meta",
-    label: "META ENTITIES",
-    items: [
-      {
-        id: "meta_platforms_inc",
-        label: "META PLATFORMS, INC., formerly known as Facebook, Inc.",
-      },
-      { id: "instagram_llc", label: "INSTAGRAM, LLC" },
-      { id: "facebook_payments_inc", label: "FACEBOOK PAYMENTS, INC." },
-      { id: "siculus_inc", label: "SICULUS, INC." },
-      { id: "facebook_operations_llc", label: "FACEBOOK OPERATIONS, LLC" },
-    ],
-  },
-  {
-    key: "tiktok",
-    label: "TIKTOK ENTITIES",
-    items: [
-      { id: "bytedance_ltd", label: "BYTEDANCE, LTD" },
-      { id: "bytedance_inc", label: "BYTEDANCE, INC" },
-      { id: "tiktok_ltd", label: "TIKTOK, LTD." },
-      { id: "tiktok_llc", label: "TIKTOK, LLC." },
-      { id: "tiktok_inc", label: "TIKTOK, INC." },
-    ],
-  },
-  {
-    key: "snap",
-    label: "SNAP ENTITY",
-    items: [{ id: "snap_inc", label: "SNAP INC." }],
-  },
-  {
-    key: "google",
-    label: "GOOGLE ENTITIES",
-    items: [
-      { id: "google_llc", label: "GOOGLE LLC" },
-      { id: "youtube_llc", label: "YOUTUBE, LLC" },
-    ],
-  },
+const PLATFORM_OPTIONS = ["Instagram", "Facebook", "TikTok", "Snapchat", "YouTube"];
+const DAILY_USAGE_OPTIONS = ["<1 hr", "1-3 hrs", "3-5 hrs", "5+ hrs"];
+const CONDITION_OPTIONS = [
+  "Depression",
+  "Anxiety",
+  "Eating disorder (anorexia, bulimia)",
+  "Self-harm behavior",
+  "Suicide attempt",
+  "Suicidal ideation",
 ];
+const BEFORE_OPTIONS = ["No issues", "Mild", "Significant"];
+const AFTER_OPTIONS = ["Worse", "Same"];
 
-const PRODUCT_KEYS = ["facebook", "instagram", "snapchat", "tiktok", "youtube"];
+const initialData = {
+  contactEmail: "",
+  contactPhone: "",
+  signedDate: "",
+  clientEntityName: "",
+  authorizedRepresentativeNameTitle: "",
+  authorizedRepresentativeBy: "",
+  coCounsel: "",
+  counselAddress: "",
+  counselCityStateZip: "",
 
-const PRODUCT_LABELS = {
-  facebook: "FACEBOOK",
-  instagram: "INSTAGRAM",
-  snapchat: "SNAPCHAT",
-  tiktok: "TIKTOK",
-  youtube: "YOUTUBE",
+  fullName: "",
+  dateOfBirth: "",
+  currentAge: "",
+  stateOfResidence: "",
+  parentGuardian: "",
+
+  platformsUsed: [],
+  ageWhenUseStarted: "",
+  averageDailyUsage: "",
+  usageIncreasedOverTime: "",
+  unableToStop: "",
+
+  diagnosedConditions: [],
+  therapy: "",
+  psychiatrist: "",
+  medicationsPrescribed: "",
+  hospitalization: "",
+
+  mentalHealthBeforeSocialMedia: "",
+  mentalHealthAfterHeavyUse: "",
+  symptomsBegin: "",
+
+  dropInGrades: "",
+  socialWithdrawal: "",
+  sleepDisruption: "",
+  eatingBehaviorChanges: "",
+
+  medicalRecords: "",
+  schoolRecords: "",
+  screenTimeData: "",
+
+  accepted: false,
 };
 
-const FLAT_INJURY_OPTIONS = [
-  "ADDICTION/COMPULSIVE USE",
-  "DEPRESSION",
-  "ANXIETY",
-  "CHILD SEX ABUSE",
-  "CSAM VIOLATIONS",
-];
-
-const EATING_DISORDER_OPTIONS = ["Anorexia", "Bulimia", "Binge Eating"];
-const SELF_HARM_OPTIONS = ["Suicidality", "Attempted Suicide", "Death by Suicide"];
-
-const CAUSES = [
-  { count: 1, title: "STRICT LIABILITY - DESIGN DEFECT" },
-  { count: 2, title: "STRICT LIABILITY - FAILURE TO WARN" },
-  { count: 3, title: "NEGLIGENCE - DESIGN" },
-  { count: 4, title: "NEGLIGENCE – FAILURE TO WARN" },
-  { count: 5, title: "NEGLIGENCE" },
-  { count: 6, title: "NEGLIGENT UNDERTAKING" },
-  { count: 7, title: "VIOLATION OF UNFAIR TRADE PRACTICES/CONSUMER PROTECTION LAWS" },
-  { count: 8, title: "FRAUDULENT CONCEALMENT AND MISREPRESENTATION (Against Meta only)" },
-  { count: 9, title: "NEGLIGENT CONCEALMENT AND MISREPRESENTATION (Against Meta only)" },
-  { count: 10, title: "NEGLIGENCE PER SE" },
-  {
-    count: 11,
-    title:
-      "VIOLATIONS OF 18 U.S.C. §§ 1595 and 1591 (Civil Remedy for Sex trafficking of children or by force, fraud, or coercion)",
-  },
-  {
-    count: 12,
-    title:
-      "VIOLATIONS OF 18 U.S.C. §§ 2255 and 2252 (Civil remedy Certain activities relating to material involving the sexual exploitation of minors)",
-  },
-  {
-    count: 13,
-    title:
-      "VIOLATIONS OF 18 U.S.C. §§ 2252A(f), 1466A (Civil remedy for Certain activities relating to material constituting or containing child pornography)",
-  },
-  {
-    count: 14,
-    title:
-      "VIOLATIONS OF 18 U.S.C. §§ 2255 and 2252A(5)(b) (Civil remedy for Certain activities relating to material constituting or containing child pornography)",
-  },
-  {
-    count: 15,
-    title:
-      "VIOLATIONS OF 18 U.S.C. §§ 2258B and 2258A (Liability related to Reporting requirements of providers regarding online child sexual exploitation)",
-  },
-  { count: 16, title: "WRONGFUL DEATH" },
-  { count: 17, title: "SURVIVAL ACTION" },
-  { count: 18, title: "LOSS OF CONSORTIUM AND SOCIETY" },
-];
-
-const createCauseState = () =>
-  CAUSES.reduce((acc, cause) => {
-    acc[cause.count] = {
-      meta: false,
-      snap: false,
-      tiktok: false,
-      google: false,
-      otherDefendants: "",
-      statute: "",
-    };
-    return acc;
-  }, {});
-
-const defaultProducts = PRODUCT_KEYS.reduce((acc, key) => {
-  acc[key] = { selected: false, from: "", to: "" };
-  return acc;
-}, {});
+const YesNoQuestion = ({ title, name, value, onChange, required = false }) => (
+  <div className="social-injury-group">
+    <h4>{title}</h4>
+    <div className="checkbox-grid">
+      {["Yes", "No"].map((option) => (
+        <label key={option} className="checkbox-item">
+          <input
+            type="radio"
+            name={name}
+            value={option}
+            required={required}
+            checked={value === option}
+            onChange={() => onChange(name, option)}
+          />
+          <span>{option}</span>
+        </label>
+      ))}
+    </div>
+  </div>
+);
 
 const SocialMediaClaimForm = () => {
   const formRef = useRef(null);
-  const navigate = useNavigate();
-
   const [isSending, setIsSending] = useState(false);
-  const [showEmailPopup, setShowEmailPopup] = useState(false);
-  const [emailToConfirm, setEmailToConfirm] = useState("");
-
-  const [contactInfo, setContactInfo] = useState({
-    intakeEmail: "",
-    intakePhone: "",
-  });
-
-  const [selectedDefendants, setSelectedDefendants] = useState({});
-
-  const [formData, setFormData] = useState({
-    directFiledDistrict: "",
-    transferredDistrict: "",
-    transferredDate: "",
-    plaintiffName: "",
-    ageAtFiling: "",
-    platformCitiesStates: "",
-    guardianAdLitem: "",
-    consortiumPlaintiffs: "",
-    decedentInfo: "",
-    decedentDeathDate: "",
-    wrongfulDeathRepresentative: "",
-    residentState: "",
-    otherDefendants: Array.from({ length: 5 }, () => ({ name: "", citizenship: "" })),
-    products: defaultProducts,
-    otherProducts: "",
-    injuries: [],
-    injuryEatingOther: "",
-    injurySelfHarmOther: "",
-    injuryPhysicalOther: "",
-    causes: createCauseState(),
-    additionalCauses: "",
-    disclaimerAccepted: false,
-  });
+  const [formData, setFormData] = useState(initialData);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -174,1013 +95,669 @@ const SocialMediaClaimForm = () => {
     };
   }, []);
 
-  const handleBasicChange = (field, value) => {
+  const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleProductChange = (key, field, value) => {
+  const toggleMultiValue = (field, value) => {
     setFormData((prev) => ({
       ...prev,
-      products: {
-        ...prev.products,
-        [key]: {
-          ...prev.products[key],
-          [field]: value,
-        },
-      },
+      [field]: prev[field].includes(value)
+        ? prev[field].filter((item) => item !== value)
+        : [...prev[field], value],
     }));
   };
-
-  const handleOtherDefendantChange = (index, field, value) => {
-    setFormData((prev) => {
-      const next = [...prev.otherDefendants];
-      next[index] = { ...next[index], [field]: value };
-      return { ...prev, otherDefendants: next };
-    });
-  };
-
-  const toggleInjury = (value) => {
-    setFormData((prev) => ({
-      ...prev,
-      injuries: prev.injuries.includes(value)
-        ? prev.injuries.filter((item) => item !== value)
-        : [...prev.injuries, value],
-    }));
-  };
-
-  const toggleDefendantCheckbox = (name, checked) => {
-    setSelectedDefendants((prev) => ({ ...prev, [name]: checked }));
-  };
-
-  const handleCauseChange = (count, field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      causes: {
-        ...prev.causes,
-        [count]: {
-          ...prev.causes[count],
-          [field]: value,
-        },
-      },
-    }));
-  };
-
-  const otherDefendantsSummary = useMemo(
-    () =>
-      formData.otherDefendants
-        .map((entry, idx) => {
-          if (!entry.name && !entry.citizenship) return "";
-          return `${idx + 1}. ${entry.name || "N/A"} — ${entry.citizenship || "N/A"}`;
-        })
-        .filter(Boolean)
-        .join("\n"),
-    [formData.otherDefendants]
-  );
-
-  const selectedDefendantsSummary = useMemo(() => {
-    const selections = [];
-    DEFENDANT_GROUPS.forEach((group) => {
-      group.items.forEach((item) => {
-        const key = `def_${item.id}`;
-        if (selectedDefendants[key]) selections.push(item.label);
-      });
-    });
-    return selections.join("\n");
-  }, [selectedDefendants]);
-
-  const productUseSummary = useMemo(() => {
-    const rows = PRODUCT_KEYS.map((key) => {
-      const item = formData.products[key];
-      if (!item.selected) return "";
-      return `${PRODUCT_LABELS[key]}: ${item.from || "N/A"} to ${item.to || "N/A"}`;
-    }).filter(Boolean);
-
-    if (formData.otherProducts.trim()) {
-      rows.push(`OTHER: ${formData.otherProducts.trim()}`);
-    }
-
-    return rows.join("\n");
-  }, [formData.products, formData.otherProducts]);
-
-  const selectedInjuriesSummary = useMemo(() => {
-    const items = [...formData.injuries];
-    if (formData.injuryEatingOther.trim()) {
-      items.push(`EATING DISORDER - Other: ${formData.injuryEatingOther.trim()}`);
-    }
-    if (formData.injurySelfHarmOther.trim()) {
-      items.push(`SELF-HARM - Other Self-Harm: ${formData.injurySelfHarmOther.trim()}`);
-    }
-    if (formData.injuryPhysicalOther.trim()) {
-      items.push(`OTHER PHYSICAL INJURIES (SPECIFY): ${formData.injuryPhysicalOther.trim()}`);
-    }
-    return items.join("\n");
-  }, [
-    formData.injuries,
-    formData.injuryEatingOther,
-    formData.injurySelfHarmOther,
-    formData.injuryPhysicalOther,
-  ]);
-
-  const causesSummary = useMemo(
-    () =>
-      CAUSES.map((cause) => {
-        const current = formData.causes[cause.count];
-        const assertedAgainst = [
-          current.meta ? "Meta entities" : null,
-          current.snap ? "Snap entity" : null,
-          current.tiktok ? "TikTok entities" : null,
-          current.google ? "Google entities" : null,
-          current.otherDefendants ? `Other Defendant(s): ${current.otherDefendants}` : null,
-        ]
-          .filter(Boolean)
-          .join(", ");
-
-        const statuteLine =
-          cause.count === 7 && current.statute
-            ? ` | Identify Applicable State Statute(s): ${current.statute}`
-            : "";
-
-        return `${cause.count}. ${cause.title}${
-          assertedAgainst ? ` | Asserted Against: ${assertedAgainst}` : ""
-        }${statuteLine}`;
-      }).join("\n"),
-    [formData.causes]
-  );
 
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const hasValue = (value) => String(value ?? "").trim().length > 0;
 
-  const handleInitialSubmit = (e) => {
+  const platformsSummary = useMemo(
+    () => (formData.platformsUsed.length ? formData.platformsUsed.join(", ") : "None selected"),
+    [formData.platformsUsed]
+  );
+
+  const conditionsSummary = useMemo(
+    () =>
+      formData.diagnosedConditions.length
+        ? formData.diagnosedConditions.join(", ")
+        : "None selected",
+    [formData.diagnosedConditions]
+  );
+
+  const signedDateParts = useMemo(() => {
+    if (!formData.signedDate) {
+      return { day: "", month: "", year: "" };
+    }
+
+    const [year = "", month = "", day = ""] = formData.signedDate.split("-");
+    return { day, month, year };
+  }, [formData.signedDate]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const validationErrors = [];
+    const errors = [];
 
-    if (!isValidEmail(contactInfo.intakeEmail)) {
-      validationErrors.push("Response Contact: Enter a valid email address.");
+    if (!hasValue(formData.clientEntityName)) errors.push("Client entity name is required.");
+    if (!hasValue(formData.authorizedRepresentativeNameTitle)) {
+      errors.push("Authorized representative name/title is required.");
+    }
+    if (!hasValue(formData.authorizedRepresentativeBy)) errors.push("BY is required.");
+    if (!hasValue(formData.signedDate)) errors.push("Signed date is required.");
+
+    if (!hasValue(formData.contactEmail) || !isValidEmail(formData.contactEmail)) {
+      errors.push("Valid contact email is required.");
+    }
+    if (!hasValue(formData.contactPhone)) errors.push("Contact phone is required.");
+    if (!hasValue(formData.counselAddress)) {
+      errors.push("Address (Street + Suite if Applicable) is required.");
+    }
+    if (!hasValue(formData.counselCityStateZip)) errors.push("City, State, Zip is required.");
+
+    if (!hasValue(formData.fullName)) errors.push("Name is required.");
+    if (!hasValue(formData.dateOfBirth)) errors.push("Date of birth is required.");
+    if (!hasValue(formData.currentAge)) errors.push("Current age is required.");
+    if (!hasValue(formData.stateOfResidence)) errors.push("State of residence is required.");
+    if (!hasValue(formData.parentGuardian)) errors.push("Parent/Guardian is required.");
+
+    if (formData.platformsUsed.length === 0) errors.push("Select at least one platform.");
+    if (!hasValue(formData.ageWhenUseStarted)) errors.push("Age when use started is required.");
+    if (!hasValue(formData.averageDailyUsage)) errors.push("Select average daily usage.");
+    if (!hasValue(formData.usageIncreasedOverTime)) errors.push("Usage increase response is required.");
+    if (!hasValue(formData.unableToStop)) errors.push("Unable-to-stop response is required.");
+
+    if (formData.diagnosedConditions.length === 0) {
+      errors.push("Select at least one diagnosed condition.");
+    }
+    if (!hasValue(formData.therapy)) errors.push("Therapy response is required.");
+    if (!hasValue(formData.psychiatrist)) errors.push("Psychiatrist response is required.");
+    if (!hasValue(formData.medicationsPrescribed)) {
+      errors.push("Medications prescribed response is required.");
+    }
+    if (!hasValue(formData.hospitalization)) errors.push("Hospitalization response is required.");
+
+    if (!hasValue(formData.mentalHealthBeforeSocialMedia)) {
+      errors.push("Mental health BEFORE social media response is required.");
+    }
+    if (!hasValue(formData.mentalHealthAfterHeavyUse)) {
+      errors.push("Mental health AFTER heavy use response is required.");
+    }
+    if (!hasValue(formData.symptomsBegin)) errors.push("Symptoms begin date is required.");
+
+    if (!hasValue(formData.dropInGrades)) errors.push("Drop in grades response is required.");
+    if (!hasValue(formData.socialWithdrawal)) errors.push("Social withdrawal response is required.");
+    if (!hasValue(formData.sleepDisruption)) errors.push("Sleep disruption response is required.");
+    if (!hasValue(formData.eatingBehaviorChanges)) {
+      errors.push("Eating behavior changes response is required.");
     }
 
-    const incompleteOtherDefendantRows = formData.otherDefendants
-      .map((entry, index) => {
-        const hasName = hasValue(entry.name);
-        const hasCitizenship = hasValue(entry.citizenship);
-        return hasName !== hasCitizenship ? index + 1 : null;
-      })
-      .filter(Boolean);
-
-    const hasDirectFiledDistrict = hasValue(formData.directFiledDistrict);
-    const hasTransferredDistrict = hasValue(formData.transferredDistrict);
-    const hasTransferredDate = hasValue(formData.transferredDate);
-    if (!hasDirectFiledDistrict && !hasTransferredDistrict && !hasTransferredDate) {
-      validationErrors.push(
-        "Question 1/2: Provide either the direct-filed district (Q1), or transferred district and filing date (Q2)."
-      );
-    }
-    if (hasTransferredDistrict !== hasTransferredDate) {
-      validationErrors.push(
-        "Question 2: Both transferred district and transferred filing date are required when this section is used."
-      );
+    if (!hasValue(formData.medicalRecords)) errors.push("Medical records response is required.");
+    if (!hasValue(formData.schoolRecords)) errors.push("School records response is required.");
+    if (!hasValue(formData.screenTimeData)) {
+      errors.push("Screen time data response is required.");
     }
 
-    if (!hasValue(formData.plaintiffName)) {
-      validationErrors.push("Question 3: Plaintiff name is required.");
-    }
+    if (!formData.accepted) errors.push("Please confirm the intake checkbox.");
 
-    if (!hasValue(formData.ageAtFiling)) {
-      validationErrors.push("Question 4: Age at time of filing is required.");
-    }
-
-    if (!hasValue(formData.platformCitiesStates)) {
-      validationErrors.push("Question 5: City(ies) and state(s) of primary platform use are required.");
-    }
-
-    if (!hasValue(formData.residentState)) {
-      validationErrors.push("Question 9: Resident/citizenship state is required.");
-    }
-
-    const q8HasAnyValue =
-      hasValue(formData.decedentInfo) ||
-      hasValue(formData.decedentDeathDate) ||
-      hasValue(formData.wrongfulDeathRepresentative);
-    if (q8HasAnyValue) {
-      if (!hasValue(formData.decedentInfo)) {
-        validationErrors.push("Question 8(a): Decedent name and state are required once Question 8 is started.");
-      }
-      if (!hasValue(formData.decedentDeathDate)) {
-        validationErrors.push("Question 8(b): Decedent date of death is required once Question 8 is started.");
-      }
-      if (!hasValue(formData.wrongfulDeathRepresentative)) {
-        validationErrors.push(
-          "Question 8(c): Wrongful-death representative name/capacity is required once Question 8 is started."
-        );
-      }
-    }
-
-    const hasSelectedDefendant = Object.values(selectedDefendants).some(Boolean);
-    const completeOtherDefendantRows = formData.otherDefendants
-      .map((entry, index) =>
-        hasValue(entry.name) && hasValue(entry.citizenship) ? String(index + 1) : null
-      )
-      .filter(Boolean);
-    if (!hasSelectedDefendant && completeOtherDefendantRows.length === 0) {
-      validationErrors.push(
-        "Question 10: Select at least one listed defendant or provide at least one complete Other Defendant row."
-      );
-    }
-
-    if (incompleteOtherDefendantRows.length > 0) {
-      validationErrors.push(
-        `Question 10: Complete both Name and Citizenship for Other Defendant row(s): ${incompleteOtherDefendantRows.join(
-          ", "
-        )}, or clear those rows.`
-      );
-    }
-
-    const selectedProductKeys = PRODUCT_KEYS.filter((key) => formData.products[key].selected);
-    if (selectedProductKeys.length === 0 && !hasValue(formData.otherProducts)) {
-      validationErrors.push(
-        "Question 11: Select at least one social media product or complete the OTHER product field."
-      );
-    }
-
-    PRODUCT_KEYS.forEach((key) => {
-      const product = formData.products[key];
-      const label = PRODUCT_LABELS[key];
-      const hasFrom = hasValue(product.from);
-      const hasTo = hasValue(product.to);
-
-      if (product.selected && (!hasFrom || !hasTo)) {
-        validationErrors.push(`Question 11 (${label}): Both start and end dates are required when selected.`);
-      }
-
-      if (!product.selected && (hasFrom || hasTo)) {
-        validationErrors.push(
-          `Question 11 (${label}): Check the product first, or clear the dates entered for that product.`
-        );
-      }
-
-      if (hasFrom && hasTo && product.from > product.to) {
-        validationErrors.push(
-          `Question 11 (${label}): End date must be the same as or later than the start date.`
-        );
-      }
-    });
-
-    const hasInjuryResponse =
-      formData.injuries.length > 0 ||
-      hasValue(formData.injuryEatingOther) ||
-      hasValue(formData.injurySelfHarmOther) ||
-      hasValue(formData.injuryPhysicalOther);
-    if (!hasInjuryResponse) {
-      validationErrors.push(
-        "Question 12: Select at least one injury option or provide details in an injury Other field."
-      );
-    }
-
-    let hasAnyCauseSelection = false;
-    const completeOtherRowSet = new Set(completeOtherDefendantRows);
-    CAUSES.forEach((cause) => {
-      const current = formData.causes[cause.count];
-      const countIsMetaOnly = cause.count === 8 || cause.count === 9;
-      const hasEntitySelection =
-        current.meta || (!countIsMetaOnly && (current.snap || current.tiktok || current.google));
-      const hasOtherRowRefs = hasValue(current.otherDefendants);
-
-      if (hasEntitySelection || hasOtherRowRefs) {
-        hasAnyCauseSelection = true;
-      }
-
-      if (cause.count === 7 && (hasEntitySelection || hasOtherRowRefs) && !hasValue(current.statute)) {
-        validationErrors.push("Question 13 (Count 7): Identify applicable state statute(s).");
-      }
-
-      if (hasOtherRowRefs) {
-        const refs = current.otherDefendants
-          .split(",")
-          .map((value) => value.trim())
-          .filter(Boolean);
-
-        const hasInvalidRefFormat = refs.some((value) => !/^\d+$/.test(value));
-        if (hasInvalidRefFormat) {
-          validationErrors.push(
-            `Question 13 (Count ${cause.count}): Other Defendant(s) must be row numbers (for example: 1, 2).`
-          );
-          return;
-        }
-
-        const missingRows = refs.filter((value) => !completeOtherRowSet.has(value));
-        if (missingRows.length > 0) {
-          validationErrors.push(
-            `Question 13 (Count ${cause.count}): Referenced Other Defendant row(s) must be fully completed in Question 10: ${missingRows.join(
-              ", "
-            )}.`
-          );
-        }
-      }
-    });
-
-    if (!hasAnyCauseSelection) {
-      validationErrors.push("Question 13: Select at least one cause-of-action row and who it is asserted against.");
-    }
-
-    if (!formData.disclaimerAccepted) {
-      validationErrors.push("Consent and Authorization: This checkbox is required.");
-    }
-
-    if (validationErrors.length > 0) {
-      alert(
-        `Please complete the required items before proceeding:\n\n- ${validationErrors.join("\n- ")}`
-      );
+    if (errors.length) {
+      alert(`Please complete the following:\n\n- ${errors.join("\n- ")}`);
       return;
     }
 
-    setEmailToConfirm(contactInfo.intakeEmail);
-    setShowEmailPopup(true);
-  };
+    try {
+      setIsSending(true);
 
-  const handleConfirmAndSend = () => {
-    setIsSending(true);
-    setShowEmailPopup(false);
-
-    emailjs
-      .sendForm(
+      await emailjs.sendForm(
         import.meta.env.VITE_SERVICE_ID6,
         import.meta.env.VITE_TEMPLATE_ID6,
         formRef.current,
         import.meta.env.VITE_USER_ID6
-      )
-      .then(
-        () => {
-          navigate("/form-processing", {
-            state: { contactEmail: contactInfo.intakeEmail },
-          });
-        },
-        (error) => {
-          console.error(error);
-          alert("Failed to submit form. Please try again.");
-          setIsSending(false);
-        }
       );
-  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    handleInitialSubmit(e);
+      alert("Form submitted successfully.");
+      setFormData(initialData);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to submit form. Please try again.");
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
     <div className="claim-form-page social-media-claim-page">
-      <div className="social-form-topnav">
-        <Link to="/file_claim_page" className="social-back-link">
-          <ArrowLeft size={18} /> Back to File a Claim
-        </Link>
-      </div>
-
       <h2>MASTER SHORT-FORM COMPLAINT AND DEMAND FOR JURY TRIAL</h2>
+      <p className="social-form-intro">
+        Complete the intake below based on the client&apos;s social media usage, injuries, timeline,
+        and supporting documentation.
+      </p>
 
-      {showEmailPopup && (
-        <div className="email-popup-overlay">
-          <div className="email-popup">
-            <h3>Confirm Your Email</h3>
-            <p>Please confirm the email address where we should send any follow-up regarding this questionnaire.</p>
-            <label>
-              Proceed using this email:
-              <input
-                type="email"
-                value={emailToConfirm}
-                onChange={(e) => {
-                  setEmailToConfirm(e.target.value);
-                  setContactInfo((prev) => ({ ...prev, intakeEmail: e.target.value }));
-                }}
-              />
-            </label>
-            <div className="popup-buttons">
-              <button
-                type="button"
-                className="cancel_btn"
-                onClick={() => setShowEmailPopup(false)}
-                disabled={isSending}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="proceed_btn"
-                onClick={handleConfirmAndSend}
-                disabled={isSending || !isValidEmail(emailToConfirm)}
-              >
-                {isSending ? (
-                  <>
-                    <Loader2 className="animate_spin" size={18} /> Sending...
-                  </>
-                ) : (
-                  "Proceed"
-                )}
-              </button>
+      <form ref={formRef} onSubmit={handleSubmit}>
+        <h3>Client Contact</h3>
+        <fieldset>
+        <div className="signature-top-wrap">
+          <div className="signature-grid-head">
+            <span>CLIENT SECTION</span>
+            <span>LAW FIRM SECTION</span>
+          </div>
+
+          <div className="signature-grid-table">
+            <div className="signature-grid-row">
+              <div className="signature-grid-cell">
+                <label>
+                  <span>Please print Client Entity Name:</span>
+                  <input
+                    type="text"
+                    name="client_entity_name"
+                    value={formData.clientEntityName}
+                    onChange={(e) => handleChange("clientEntityName", e.target.value)}
+                    required
+                  />
+                </label>
+              </div>
+              <div className="signature-grid-cell signature-grid-static-text">
+                DAVID GROSSMAN &amp; ASSOCIATES, PLLC
+              </div>
+            </div>
+
+            <div className="signature-grid-row">
+              <div className="signature-grid-cell">
+                <label>
+                  <span>Print Name &amp; Title of Authorized Representative:</span>
+                  <input
+                    type="text"
+                    name="authorized_representative_name_title"
+                    value={formData.authorizedRepresentativeNameTitle}
+                    onChange={(e) =>
+                      handleChange("authorizedRepresentativeNameTitle", e.target.value)
+                    }
+                    required
+                  />
+                </label>
+              </div>
+              <div className="signature-grid-cell signature-grid-empty" />
+            </div>
+
+            <div className="signature-grid-row">
+              <div className="signature-grid-cell signature-grid-empty" />
+              <div className="signature-grid-cell">
+                <label>
+                  <span>BY:</span>
+                  <input
+                    type="text"
+                    name="authorized_representative_by"
+                    value={formData.authorizedRepresentativeBy}
+                    onChange={(e) => handleChange("authorizedRepresentativeBy", e.target.value)}
+                    required
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className="signature-grid-row">
+              <div className="signature-grid-cell">
+                <label>
+                  <span>Contact Email:</span>
+                  <input
+                    type="email"
+                    name="authorized_contact_email"
+                    value={formData.contactEmail}
+                    onChange={(e) => handleChange("contactEmail", e.target.value)}
+                    required
+                  />
+                </label>
+              </div>
+              <div className="signature-grid-cell">
+                <div className="signature-date-block">
+                  <span className="signature-date-label">DATE:</span>
+                  <input
+                    type="date"
+                    name="signed_date"
+                    value={formData.signedDate}
+                    onChange={(e) => handleChange("signedDate", e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="signature-grid-row">
+              <div className="signature-grid-cell">
+                <label>
+                  <span>Contact Phone:</span>
+                  <input
+                    type="tel"
+                    name="authorized_contact_phone"
+                    value={formData.contactPhone}
+                    onChange={(e) => handleChange("contactPhone", e.target.value)}
+                    required
+                  />
+                </label>
+              </div>
+              <div className="signature-grid-cell">
+                <label>
+                  <span>co-counsel</span>
+                  <input
+                    type="text"
+                    name="co_counsel"
+                    value={formData.coCounsel}
+                    onChange={(e) => handleChange("coCounsel", e.target.value)}
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className="signature-grid-row">
+              <div className="signature-grid-cell">
+                <label>
+                  <span>Address (Street + Suite if Applicable):</span>
+                  <textarea
+                    name="address_street_suite"
+                    value={formData.counselAddress}
+                    onChange={(e) => handleChange("counselAddress", e.target.value)}
+                    required
+                  />
+                </label>
+              </div>
+              <div className="signature-grid-cell signature-grid-empty" />
+            </div>
+
+            <div className="signature-grid-row">
+              <div className="signature-grid-cell">
+                <label>
+                  <span>City, State, Zip:</span>
+                  <input
+                    type="text"
+                    name="city_state_zip"
+                    value={formData.counselCityStateZip}
+                    onChange={(e) => handleChange("counselCityStateZip", e.target.value)}
+                    required
+                  />
+                </label>
+              </div>
+              <div className="signature-grid-cell signature-grid-empty" />
             </div>
           </div>
         </div>
-      )}
 
-      <form ref={formRef} onSubmit={handleSubmit}>
-        <h3>Response Contact</h3>
-        <div className="contact-row">
-          <label>
-            <span>Email for follow-up *</span>
-            <input
-              type="email"
-              name="intake_email"
-              value={contactInfo.intakeEmail}
-              onChange={(e) => setContactInfo((prev) => ({ ...prev, intakeEmail: e.target.value }))}
-              required
-            />
-          </label>
-          <label>
-            <span>Phone number</span>
-            <input
-              type="tel"
-              name="intake_phone"
-              value={contactInfo.intakePhone}
-              onChange={(e) => setContactInfo((prev) => ({ ...prev, intakePhone: e.target.value }))}
-            />
-          </label>
-        </div>
-
-        <h3>I. DESIGNATED FORUM</h3>
-        <fieldset>
-          <div className="contact-fields">
+          <div className="contact-row">
             <label>
-              <span>
-                1. For Direct Filed Cases: Identify the Federal District Court in which the Plaintiff(s) would have
-                filed in the absence of direct filing:
-              </span>
+              <span>Contact Email *</span>
               <input
-                type="text"
-                name="direct_filed_district"
-                value={formData.directFiledDistrict}
-                onChange={(e) => handleBasicChange("directFiledDistrict", e.target.value)}
+                type="email"
+                name="contact_email"
+                value={formData.contactEmail}
+                onChange={(e) => handleChange("contactEmail", e.target.value)}
+                required
               />
             </label>
 
-            <div className="contact-row">
-              <label>
-                <span>
-                  2. For Transferred Cases: Identify the Federal District Court in which the Plaintiff(s) originally
-                  filed
-                </span>
-                <input
-                  type="text"
-                  name="transferred_district"
-                  value={formData.transferredDistrict}
-                  onChange={(e) => handleBasicChange("transferredDistrict", e.target.value)}
-                />
-              </label>
-
-              <label>
-                <span>and the date of filing:</span>
-                <input
-                  type="date"
-                  name="transferred_filing_date"
-                  value={formData.transferredDate}
-                  onChange={(e) => handleBasicChange("transferredDate", e.target.value)}
-                />
-              </label>
-            </div>
+            <label>
+              <span>Contact Phone</span>
+              <input
+                type="tel"
+                name="contact_phone"
+                value={formData.contactPhone}
+                onChange={(e) => handleChange("contactPhone", e.target.value)}
+                required
+              />
+            </label>
           </div>
         </fieldset>
 
-        <h3>II. IDENTIFICATION OF PARTIES</h3>
-        <h3>A. PLAINTIFF</h3>
+        <h3>SECTION A - Basic Qualification</h3>
         <fieldset>
           <div className="contact-fields">
             <label>
-              <span>
-                3. Plaintiff: Name of the individual injured due to use of Defendant(s)’ social media products:
-              </span>
+              <span>Name *</span>
               <input
                 type="text"
-                name="plaintiff_name"
-                value={formData.plaintiffName}
-                onChange={(e) => handleBasicChange("plaintiffName", e.target.value)}
+                name="full_name"
+                value={formData.fullName}
+                onChange={(e) => handleChange("fullName", e.target.value)}
                 required
               />
             </label>
 
             <div className="contact-row">
               <label>
-                <span>4. Age at time of filing:</span>
+                <span>Date of Birth</span>
+                <input
+                  type="date"
+                  name="date_of_birth"
+                  value={formData.dateOfBirth}
+                  onChange={(e) => handleChange("dateOfBirth", e.target.value)}
+                  required
+                />
+              </label>
+
+              <label>
+                <span>Current Age *</span>
                 <input
                   type="number"
                   min="0"
-                  name="age_at_filing"
-                  value={formData.ageAtFiling}
-                  onChange={(e) => handleBasicChange("ageAtFiling", e.target.value)}
-                />
-              </label>
-
-              <label>
-                <span>
-                  9. At the time of the filing of this Short-Form Complaint, Plaintiff(s) are residents and citizens of
-                  [Indicate State]:
-                </span>
-                <input
-                  type="text"
-                  name="resident_state"
-                  value={formData.residentState}
-                  onChange={(e) => handleBasicChange("residentState", e.target.value)}
+                  name="current_age"
+                  value={formData.currentAge}
+                  onChange={(e) => handleChange("currentAge", e.target.value)}
+                  required
                 />
               </label>
             </div>
-
-            <label>
-              <span>5. City(ies) and state(s) where Plaintiff primarily used Defendants’ platforms:</span>
-              <textarea
-                name="platform_cities_states"
-                value={formData.platformCitiesStates}
-                onChange={(e) => handleBasicChange("platformCitiesStates", e.target.value)}
-              />
-            </label>
-
-            <label>
-              <span>6. Last Name and State of Residence of Guardian Ad Litem, if applicable:</span>
-              <input
-                type="text"
-                name="guardian_ad_litem"
-                value={formData.guardianAdLitem}
-                onChange={(e) => handleBasicChange("guardianAdLitem", e.target.value)}
-              />
-            </label>
-
-            <label>
-              <span>
-                7. Name of the individual(s) that allege damages for loss of society or consortium (Consortium
-                Plaintiff(s)) and their relationship to Plaintiff, if applicable:
-              </span>
-              <textarea
-                name="consortium_plaintiffs"
-                value={formData.consortiumPlaintiffs}
-                onChange={(e) => handleBasicChange("consortiumPlaintiffs", e.target.value)}
-              />
-            </label>
-
-            <div className="social-subsection-title">8. Survival and/or Wrongful Death Claims, if applicable:</div>
-
-            <label>
-              <span>(a) Name of decedent and state of residence at time of death:</span>
-              <input
-                type="text"
-                name="decedent_info"
-                value={formData.decedentInfo}
-                onChange={(e) => handleBasicChange("decedentInfo", e.target.value)}
-              />
-            </label>
 
             <div className="contact-row">
               <label>
-                <span>(b) Date of decedent’s death:</span>
+                <span>State of Residence *</span>
                 <input
-                  type="date"
-                  name="decedent_death_date"
-                  value={formData.decedentDeathDate}
-                  onChange={(e) => handleBasicChange("decedentDeathDate", e.target.value)}
+                  type="text"
+                  name="state_of_residence"
+                  value={formData.stateOfResidence}
+                  onChange={(e) => handleChange("stateOfResidence", e.target.value)}
+                  required
                 />
               </label>
 
               <label>
-                <span>
-                  (c) Name and capacity (i.e. executor, administrator, etc.) of Plaintiff(s) bringing claim for
-                  decedent’s wrongful death:
-                </span>
+                <span>Parent/Guardian (if minor at time of injury)</span>
                 <input
                   type="text"
-                  name="wrongful_death_representative"
-                  value={formData.wrongfulDeathRepresentative}
-                  onChange={(e) => handleBasicChange("wrongfulDeathRepresentative", e.target.value)}
+                  name="parent_guardian"
+                  value={formData.parentGuardian}
+                  onChange={(e) => handleChange("parentGuardian", e.target.value)}
+                  required
                 />
               </label>
             </div>
           </div>
         </fieldset>
 
-        <h3>B. DEFENDANT(S)</h3>
+        <h3>SECTION B - Platform Usage</h3>
         <fieldset>
-          <legend>10. Plaintiff(s) name(s) the following Defendants in this action [Check all that apply]:</legend>
+          <legend>Which platforms used? (check all)</legend>
 
-          <div className="social-defendant-groups">
-            {DEFENDANT_GROUPS.map((group) => (
-              <div key={group.key} className="social-defendant-card">
-                <h4>{group.label}</h4>
-                {group.items.map((item) => {
-                  const inputName = `def_${item.id}`;
-                  return (
-                    <label key={item.id} className="checkbox-item">
-                      <input
-                        type="checkbox"
-                        checked={!!selectedDefendants[inputName]}
-                        onChange={(e) => toggleDefendantCheckbox(inputName, e.target.checked)}
-                      />
-                      <span>{item.label}</span>
-                    </label>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-
-          <div className="social-other-defendants">
-            <h4>OTHER DEFENDANTS (OPTIONAL)</h4>
-            <p className="social-optional-note">
-              Optional: Leave these fields blank if there are no additional defendants.
-            </p>
-            <p>
-              For each “Other Defendant” Plaintiff(s) contend(s) are additional parties and are liable or responsible
-              for Plaintiff(s) damages alleged herein, Plaintiffs must identify by name each Defendant and its
-              citizenship, and Plaintiff(s) must plead the specific facts supporting any claim against each “Other
-              Defendant” in a manner complying with the requirements of the Federal Rules of Civil Procedure. In doing
-              so, Plaintiff(s) may attach additional pages to this Short-Form Complaint.
-            </p>
-
-            <div className="social-other-header">
-              <span>NAME</span>
-              <span>CITIZENSHIP</span>
-            </div>
-
-            {formData.otherDefendants.map((entry, index) => (
-              <div key={index} className="contact-row social-other-row">
-                <label>
-                  <span>Name {index + 1}</span>
-                  <input
-                    type="text"
-                    value={entry.name}
-                    onChange={(e) => handleOtherDefendantChange(index, "name", e.target.value)}
-                  />
-                </label>
-                <label>
-                  <span>Citizenship {index + 1}</span>
-                  <input
-                    type="text"
-                    value={entry.citizenship}
-                    onChange={(e) => handleOtherDefendantChange(index, "citizenship", e.target.value)}
-                  />
-                </label>
-              </div>
-            ))}
-          </div>
-        </fieldset>
-
-        <h3>C. PRODUCT USE</h3>
-        <fieldset>
-          <legend>
-            11. Plaintiff used the following Social Media Products that substantially contributed to their injury/ies
-            (check all that apply, and identify approximate dates of use, to the best of Plaintiff’s recollection):
-          </legend>
-
-          {PRODUCT_KEYS.map((key) => (
-            <div key={key} className="social-product-row">
-              <label className="checkbox-item social-product-toggle">
+          <div className="checkbox-grid platform-grid">
+            {PLATFORM_OPTIONS.map((platform) => (
+              <label key={platform} className="checkbox-item platform-pill">
                 <input
                   type="checkbox"
-                  checked={formData.products[key].selected}
-                  onChange={(e) => handleProductChange(key, "selected", e.target.checked)}
+                  checked={formData.platformsUsed.includes(platform)}
+                  onChange={() => toggleMultiValue("platformsUsed", platform)}
                 />
-                <span>{PRODUCT_LABELS[key]}</span>
+                <span>{platform}</span>
               </label>
+            ))}
+          </div>
 
-              <div className="contact-row social-product-dates">
-                <label>
-                  <span>Approximate dates of use:</span>
-                  <input
-                    type="date"
-                    name={`${key}_date_from`}
-                    value={formData.products[key].from}
-                    onChange={(e) => handleProductChange(key, "from", e.target.value)}
-                  />
-                </label>
+          <div className="contact-row">
+            <label>
+              <span>Age when use started</span>
+              <input
+                type="number"
+                min="0"
+                name="age_when_use_started"
+                value={formData.ageWhenUseStarted}
+                onChange={(e) => handleChange("ageWhenUseStarted", e.target.value)}
+                required
+              />
+            </label>
+          </div>
 
-                <label>
-                  <span>to</span>
+          <div className="social-injury-group">
+            <h4>Average Daily Usage</h4>
+            <div className="checkbox-grid">
+              {DAILY_USAGE_OPTIONS.map((option) => (
+                <label key={option} className="checkbox-item">
                   <input
-                    type="date"
-                    name={`${key}_date_to`}
-                    value={formData.products[key].to}
-                    onChange={(e) => handleProductChange(key, "to", e.target.value)}
+                    type="radio"
+                    name="average_daily_usage"
+                    value={option}
+                    required
+                    checked={formData.averageDailyUsage === option}
+                    onChange={() => handleChange("averageDailyUsage", option)}
                   />
+                  <span>{option === "5+ hrs" ? "5+ hrs (PRIORITY CASE)" : option}</span>
                 </label>
-              </div>
+              ))}
             </div>
-          ))}
+          </div>
 
-          <label>
-            <span>OTHER: Social Media Product(s) Used Approximate Dates of Use</span>
-            <textarea
-              name="other_products"
-              value={formData.otherProducts}
-              onChange={(e) => handleBasicChange("otherProducts", e.target.value)}
-            />
-          </label>
+          <YesNoQuestion
+            title="Did usage increase over time?"
+            name="usage_increased_over_time"
+            value={formData.usageIncreasedOverTime}
+            onChange={(_, value) => handleChange("usageIncreasedOverTime", value)}
+            required
+          />
+
+          <YesNoQuestion
+            title="Did user feel unable to stop?"
+            name="unable_to_stop"
+            value={formData.unableToStop}
+            onChange={(_, value) => handleChange("unableToStop", value)}
+            required
+          />
         </fieldset>
 
-        <h3>D. PERSONAL INJURY</h3>
+        <h3>SECTION C - Injury Profile (MOST IMPORTANT)</h3>
         <fieldset>
-          <legend>
-            12. Plaintiff(s) experienced the following personal injury/ies alleged to have been caused by Defendant(s)’
-            Social Media Products [Check all that apply]:
-          </legend>
-
+          <legend>Diagnosed Conditions (check all)</legend>
           <div className="checkbox-grid">
-            {FLAT_INJURY_OPTIONS.map((injury) => (
-              <label key={injury} className="checkbox-item">
+            {CONDITION_OPTIONS.map((condition) => (
+              <label key={condition} className="checkbox-item">
                 <input
                   type="checkbox"
-                  checked={formData.injuries.includes(injury)}
-                  onChange={() => toggleInjury(injury)}
+                  checked={formData.diagnosedConditions.includes(condition)}
+                  onChange={() => toggleMultiValue("diagnosedConditions", condition)}
                 />
-                <span>{injury}</span>
+                <span>{condition}</span>
               </label>
             ))}
           </div>
 
-          <div className="social-injury-group">
-            <h4>EATING DISORDER</h4>
-            <div className="checkbox-grid">
-              {EATING_DISORDER_OPTIONS.map((injury) => (
-                <label key={injury} className="checkbox-item">
-                  <input
-                    type="checkbox"
-                    checked={formData.injuries.includes(injury)}
-                    onChange={() => toggleInjury(injury)}
-                  />
-                  <span>{injury}</span>
-                </label>
-              ))}
-            </div>
-            <label>
-              <span>Other:</span>
-              <input
-                type="text"
-                name="injury_eating_other"
-                value={formData.injuryEatingOther}
-                onChange={(e) => handleBasicChange("injuryEatingOther", e.target.value)}
-              />
-            </label>
-          </div>
-
-          <div className="social-injury-group">
-            <h4>SELF-HARM</h4>
-            <div className="checkbox-grid">
-              {SELF_HARM_OPTIONS.map((injury) => (
-                <label key={injury} className="checkbox-item">
-                  <input
-                    type="checkbox"
-                    checked={formData.injuries.includes(injury)}
-                    onChange={() => toggleInjury(injury)}
-                  />
-                  <span>{injury}</span>
-                </label>
-              ))}
-            </div>
-            <label>
-              <span>Other Self-Harm:</span>
-              <input
-                type="text"
-                name="injury_self_harm_other"
-                value={formData.injurySelfHarmOther}
-                onChange={(e) => handleBasicChange("injurySelfHarmOther", e.target.value)}
-              />
-            </label>
-          </div>
-
-          <label>
-            <span>OTHER PHYSICAL INJURIES (SPECIFY):</span>
-            <textarea
-              name="injury_physical_other"
-              value={formData.injuryPhysicalOther}
-              onChange={(e) => handleBasicChange("injuryPhysicalOther", e.target.value)}
+          <div className="social-card-grid">
+            <YesNoQuestion
+              title="Therapy?"
+              name="therapy"
+              value={formData.therapy}
+              onChange={(_, value) => handleChange("therapy", value)}
+              required
             />
-          </label>
-        </fieldset>
-
-        <h3>V. CAUSES OF ACTION ASSERTED</h3>
-        <fieldset className="social-causes-fieldset">
-          <div className="social-causes-intro">
-            <span className="social-causes-question-number">13.</span>
-            <p>
-              The following Causes of Action asserted in the Master Complaint, and the allegations with regard thereto,
-              are adopted in this Short Form Complaint by reference <em>(check all that are adopted)</em>:
-            </p>
-          </div>
-
-          <div className="social-causes-table-wrap">
-            <table className="social-causes-table">
-              <thead>
-                <tr>
-                  <th>Asserted Against<sup>2</sup></th>
-                  <th>Count Number</th>
-                  <th>Cause of Action (CoA)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {CAUSES.map((cause) => {
-                  const current = formData.causes[cause.count];
-                  const countIsMetaOnly = cause.count === 8 || cause.count === 9;
-                  const countHasStatute = cause.count === 7;
-
-                  return (
-                    <tr key={cause.count}>
-                      <td className="social-causes-against-cell">
-                        <label className="social-table-checkbox">
-                          <input
-                            type="checkbox"
-                            checked={current.meta}
-                            onChange={(e) => handleCauseChange(cause.count, "meta", e.target.checked)}
-                          />
-                          <span>Meta entities</span>
-                        </label>
-
-                        {!countIsMetaOnly && (
-                          <>
-                            <label className="social-table-checkbox">
-                              <input
-                                type="checkbox"
-                                checked={current.snap}
-                                onChange={(e) => handleCauseChange(cause.count, "snap", e.target.checked)}
-                              />
-                              <span>Snap entity</span>
-                            </label>
-
-                            <label className="social-table-checkbox">
-                              <input
-                                type="checkbox"
-                                checked={current.tiktok}
-                                onChange={(e) => handleCauseChange(cause.count, "tiktok", e.target.checked)}
-                              />
-                              <span>TikTok entities</span>
-                            </label>
-
-                            <label className="social-table-checkbox">
-                              <input
-                                type="checkbox"
-                                checked={current.google}
-                                onChange={(e) => handleCauseChange(cause.count, "google", e.target.checked)}
-                              />
-                              <span>Google entities</span>
-                            </label>
-                          </>
-                        )}
-
-                        <label className="social-table-checkbox">
-                          <span>Other Defendant(s)</span>
-                        </label>
-
-                        <div className="social-other-def-inline">
-                          <span>##</span>
-                          <input
-                            type="text"
-                            value={current.otherDefendants}
-                            onChange={(e) => handleCauseChange(cause.count, "otherDefendants", e.target.value)}
-                            aria-label={`Other Defendant row numbers for Count ${cause.count}`}
-                          />
-                        </div>
-                      </td>
-
-                      <td className="social-causes-count-cell">{cause.count}</td>
-
-                      <td className="social-causes-title-cell">
-                        <div className="social-causes-title-text">{cause.title}</div>
-
-                        {countHasStatute && (
-                          <div className="social-statute-line">
-                            <label>
-                              <span>Identify Applicable State Statute(s):</span>
-                              <input
-                                type="text"
-                                value={current.statute}
-                                onChange={(e) => handleCauseChange(cause.count, "statute", e.target.value)}
-                              />
-                            </label>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="social-causes-footnotes">
-            <p>
-              <sup>2</sup> For purposes of this paragraph, “entity” means those defendants identified in Paragraph 7
-              (e.g., “TikTok entities” means all TikTok defendants against which Plaintiff(s) is asserting claims).
-            </p>
-            <p>
-              <sup>3</sup> Reference selected Other Defendants by the corresponding row number in the “Other
-              Defendant(s)” chart above, in Question 7.
-            </p>
+            <YesNoQuestion
+              title="Psychiatrist?"
+              name="psychiatrist"
+              value={formData.psychiatrist}
+              onChange={(_, value) => handleChange("psychiatrist", value)}
+              required
+            />
+            <YesNoQuestion
+              title="Medications prescribed?"
+              name="medications_prescribed"
+              value={formData.medicationsPrescribed}
+              onChange={(_, value) => handleChange("medicationsPrescribed", value)}
+              required
+            />
+            <YesNoQuestion
+              title="Hospitalization?"
+              name="hospitalization"
+              value={formData.hospitalization}
+              onChange={(_, value) => handleChange("hospitalization", value)}
+              required
+            />
           </div>
         </fieldset>
 
-        <h3>VI. ADDITIONAL CAUSES OF ACTION</h3>
+        <h3>SECTION D - Timeline (Causation Builder)</h3>
         <fieldset>
-          <div className="social-note-box">
-            <strong>NOTE</strong>
-            <p>
-              If Plaintiff(s) wants to allege additional Cause(s) of Action other than those selected in paragraph 10,
-              which are the Causes(s) of Action set forth in the Master Complaint, the facts supporting those
-              additional Cause(s) of Action, must be pled in a manner complying with the requirements of the Federal
-              Rules of Civil Procedure. In doing so, Plaintiff(s) may attach additional pages to this Short-Form
-              Complaint.
-            </p>
+          <div className="social-card-grid social-card-grid-two">
+            <div className="social-injury-group">
+              <h4>Mental health BEFORE social media</h4>
+              <div className="checkbox-grid">
+                {BEFORE_OPTIONS.map((option) => (
+                  <label key={option} className="checkbox-item">
+                    <input
+                      type="radio"
+                      name="mental_health_before_social_media"
+                      value={option}
+                      required
+                      checked={formData.mentalHealthBeforeSocialMedia === option}
+                      onChange={() => handleChange("mentalHealthBeforeSocialMedia", option)}
+                    />
+                    <span>{option}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="social-injury-group">
+              <h4>Mental health AFTER heavy use</h4>
+              <div className="checkbox-grid">
+                {AFTER_OPTIONS.map((option) => (
+                  <label key={option} className="checkbox-item">
+                    <input
+                      type="radio"
+                      name="mental_health_after_heavy_use"
+                      value={option}
+                      required
+                      checked={formData.mentalHealthAfterHeavyUse === option}
+                      onChange={() => handleChange("mentalHealthAfterHeavyUse", option)}
+                    />
+                    <span>{option}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
           </div>
 
           <label>
-            <span>
-              14. Plaintiff(s) assert(s) the following additional Causes of Action and supporting allegations against
-              the following Defendants:
-            </span>
-            <textarea
-              name="additional_causes"
-              value={formData.additionalCauses}
-              onChange={(e) => handleBasicChange("additionalCauses", e.target.value)}
+            <span>When did symptoms begin?</span>
+            <input
+              type="date"
+              name="symptoms_begin"
+              value={formData.symptomsBegin}
+              onChange={(e) => handleChange("symptomsBegin", e.target.value)}
+              required
             />
           </label>
+        </fieldset>
+
+        <h3>SECTION E - Life Impact</h3>
+        <fieldset>
+          <div className="social-card-grid">
+            <YesNoQuestion
+              title="Drop in grades?"
+              name="drop_in_grades"
+              value={formData.dropInGrades}
+              onChange={(_, value) => handleChange("dropInGrades", value)}
+              required
+            />
+            <YesNoQuestion
+              title="Social withdrawal?"
+              name="social_withdrawal"
+              value={formData.socialWithdrawal}
+              onChange={(_, value) => handleChange("socialWithdrawal", value)}
+              required
+            />
+            <YesNoQuestion
+              title="Sleep disruption?"
+              name="sleep_disruption"
+              value={formData.sleepDisruption}
+              onChange={(_, value) => handleChange("sleepDisruption", value)}
+              required
+            />
+            <YesNoQuestion
+              title="Eating behavior changes?"
+              name="eating_behavior_changes"
+              value={formData.eatingBehaviorChanges}
+              onChange={(_, value) => handleChange("eatingBehaviorChanges", value)}
+              required
+            />
+          </div>
+        </fieldset>
+
+        <h3>SECTION F - Documentation</h3>
+        <fieldset>
+          <div className="social-card-grid social-card-grid-three">
+            <YesNoQuestion
+              title="Do you have medical records?"
+              name="medical_records"
+              value={formData.medicalRecords}
+              onChange={(_, value) => handleChange("medicalRecords", value)}
+              required
+            />
+            <YesNoQuestion
+              title="School records?"
+              name="school_records"
+              value={formData.schoolRecords}
+              onChange={(_, value) => handleChange("schoolRecords", value)}
+              required
+            />
+            <YesNoQuestion
+              title="Screen time data available?"
+              name="screen_time_data"
+              value={formData.screenTimeData}
+              onChange={(_, value) => handleChange("screenTimeData", value)}
+              required
+            />
+          </div>
         </fieldset>
 
         <div className="disclaimer-section">
           <label className="disclaimer-label">
             <input
               type="checkbox"
-              checked={formData.disclaimerAccepted}
-              onChange={(e) => handleBasicChange("disclaimerAccepted", e.target.checked)}
+              checked={formData.accepted}
+              onChange={(e) => handleChange("accepted", e.target.checked)}
+              required
             />
             <span>
-              I confirm that the information provided in this questionnaire is true and complete to the best of my
-              knowledge, and I authorize David Grossman & Associates to contact me using the email address above.
+              I confirm that the information provided in this questionnaire is true and complete to
+              the best of my knowledge.
             </span>
           </label>
         </div>
 
-        <input type="hidden" name="selected_defendants_summary" value={selectedDefendantsSummary} />
-        <input type="hidden" name="other_defendants_summary" value={otherDefendantsSummary} />
-        <input type="hidden" name="product_use_summary" value={productUseSummary} />
-        <input type="hidden" name="injuries_summary" value={selectedInjuriesSummary} />
-        <input type="hidden" name="causes_summary" value={causesSummary} />
+        <input type="hidden" name="submission_date" value={new Date().toLocaleString()} />
+        <input type="hidden" name="signed_day" value={signedDateParts.day} />
+        <input type="hidden" name="signed_month" value={signedDateParts.month} />
+        <input type="hidden" name="signed_year" value={signedDateParts.year} />
+        <input type="hidden" name="platforms_used_summary" value={platformsSummary} />
+        <input type="hidden" name="diagnosed_conditions_summary" value={conditionsSummary} />
 
-        {DEFENDANT_GROUPS.flatMap((group) =>
-          group.items.map((item) => {
-            const key = `def_${item.id}`;
-            return (
-              <input
-                key={key}
-                type="hidden"
-                name={key}
-                value={selectedDefendants[key] ? "Yes" : "No"}
-              />
-            );
-          })
-        )}
+        {PLATFORM_OPTIONS.map((platform) => {
+          const field = `platform_${platform.toLowerCase()}`;
+          return (
+            <input
+              key={field}
+              type="hidden"
+              name={field}
+              value={formData.platformsUsed.includes(platform) ? "Yes" : "No"}
+            />
+          );
+        })}
 
-        {CAUSES.map((cause) => (
-          <React.Fragment key={`hidden-${cause.count}`}>
-            <input
-              type="hidden"
-              name={`count_${cause.count}_meta`}
-              value={formData.causes[cause.count].meta ? "Yes" : "No"}
-            />
-            <input
-              type="hidden"
-              name={`count_${cause.count}_snap`}
-              value={formData.causes[cause.count].snap ? "Yes" : "No"}
-            />
-            <input
-              type="hidden"
-              name={`count_${cause.count}_tiktok`}
-              value={formData.causes[cause.count].tiktok ? "Yes" : "No"}
-            />
-            <input
-              type="hidden"
-              name={`count_${cause.count}_google`}
-              value={formData.causes[cause.count].google ? "Yes" : "No"}
-            />
-            <input
-              type="hidden"
-              name={`count_${cause.count}_other_defendants`}
-              value={formData.causes[cause.count].otherDefendants}
-            />
-            <input
-              type="hidden"
-              name={`count_${cause.count}_statute`}
-              value={formData.causes[cause.count].statute}
-            />
-          </React.Fragment>
-        ))}
+        {CONDITION_OPTIONS.map((condition) => {
+          const safe = condition
+            .toLowerCase()
+            .replace(/\(|\)/g, "")
+            .replace(/[^a-z0-9]+/g, "_")
+            .replace(/^_|_$/g, "");
 
-        <button type="submit" disabled={isSending}>
+          return (
+            <input
+              key={safe}
+              type="hidden"
+              name={`condition_${safe}`}
+              value={formData.diagnosedConditions.includes(condition) ? "Yes" : "No"}
+            />
+          );
+        })}
+
+        <button type="submit" className="social-submit-btn" disabled={isSending}>
           {isSending ? (
             <>
-              <Loader2 className="animate_spin" size={18} /> Sending...
+              <Loader2 className="animate-spin" size={18} /> Sending...
             </>
           ) : (
-            "Submit Questionnaire"
+            "Submit Intake"
           )}
         </button>
       </form>
