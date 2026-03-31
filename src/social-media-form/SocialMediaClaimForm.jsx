@@ -137,6 +137,7 @@ const SocialMediaClaimForm = () => {
     e.preventDefault();
 
     const errors = [];
+    const contactEmailForReview = String(formData.contactEmail ?? "").trim();
 
     if (!hasValue(formData.clientEntityName)) errors.push("Client entity name is required.");
     if (!hasValue(formData.authorizedRepresentativeNameTitle)) {
@@ -145,7 +146,7 @@ const SocialMediaClaimForm = () => {
     if (!hasValue(formData.authorizedRepresentativeBy)) errors.push("BY is required.");
     if (!hasValue(formData.signedDate)) errors.push("Signed date is required.");
 
-    if (!hasValue(formData.contactEmail) || !isValidEmail(formData.contactEmail)) {
+    if (!hasValue(contactEmailForReview) || !isValidEmail(contactEmailForReview)) {
       errors.push("Valid contact email is required.");
     }
     if (!hasValue(formData.contactPhone)) errors.push("Contact phone is required.");
@@ -201,6 +202,14 @@ const SocialMediaClaimForm = () => {
 
     if (errors.length) {
       alert(`Please complete the following:\n\n- ${errors.join("\n- ")}`);
+      return;
+    }
+
+    const confirmEmail = window.confirm(
+      `Please verify this email before submitting intake:\n\n${contactEmailForReview}\n\nClick OK to submit, or Cancel to review.`
+    );
+
+    if (!confirmEmail) {
       return;
     }
 
