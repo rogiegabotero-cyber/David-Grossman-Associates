@@ -296,6 +296,86 @@
   cursor: not-allowed;
 }
 
+.social-email-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(15, 23, 42, 0.58);
+}
+
+.social-email-modal {
+  width: min(100%, 520px);
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 20px 46px rgba(2, 6, 23, 0.22);
+}
+
+.social-email-modal h4 {
+  margin: 0 0 8px;
+  font-size: 1.12rem;
+  color: #111827;
+}
+
+.social-email-modal p {
+  margin: 0 0 14px;
+  color: #4b5563;
+  line-height: 1.55;
+}
+
+.social-email-modal-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.social-email-modal-cancel,
+.social-email-modal-submit {
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.social-email-modal-cancel {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #1f2937;
+}
+
+.social-email-modal-cancel:hover {
+  background: #f9fafb;
+}
+
+.social-email-modal-submit {
+  border: 1px solid #ef4524;
+  background: #ef4524;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.social-email-modal-submit:hover {
+  background: #fff;
+  color: #ef4524;
+}
+
+.social-email-modal-cancel:disabled,
+.social-email-modal-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .animate-spin {
   animation: spin 1s linear infinite;
 }
@@ -366,5 +446,14 @@
 
   .social-submit-btn {
     padding: 13px 16px;
+  }
+
+  .social-email-modal {
+    padding: 16px;
+  }
+
+  .social-email-modal-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
   }
 }

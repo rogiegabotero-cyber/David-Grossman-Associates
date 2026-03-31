@@ -16,10 +16,12 @@ const CONDITION_OPTIONS = [
 const BEFORE_OPTIONS = ["No issues", "Mild", "Significant"];
 const AFTER_OPTIONS = ["Worse", "Same"];
 
-const initialData = {
+const getTodayIsoDate = () => new Date().toISOString().split("T")[0];
+
+const buildInitialData = () => ({
   contactEmail: "",
   contactPhone: "",
-  signedDate: "",
+  signedDate: getTodayIsoDate(),
   clientEntityName: "",
   authorizedRepresentativeNameTitle: "",
   authorizedRepresentativeBy: "",
@@ -59,7 +61,7 @@ const initialData = {
   screenTimeData: "",
 
   accepted: false,
-};
+});
 
 const YesNoQuestion = ({ title, name, value, onChange, required = false }) => (
   <div className="social-injury-group">
@@ -85,7 +87,8 @@ const YesNoQuestion = ({ title, name, value, onChange, required = false }) => (
 const SocialMediaClaimForm = () => {
   const formRef = useRef(null);
   const [isSending, setIsSending] = useState(false);
-  const [formData, setFormData] = useState(initialData);
+  const [formData, setFormData] = useState(buildInitialData);
+  const [showEmailVerificationModal, setShowEmailVerificationModal] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -109,7 +112,109 @@ const SocialMediaClaimForm = () => {
   };
 
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const sanitizePhoneInput = (value) => {
+    let cleaned = String(value ?? "").replace(/[^\d+\s().-]/g, "");
+    const hasLeadingPlus = cleaned.startsWith("+");
+    cleaned = cleaned.replace(/\+/g, "");
+    return hasLeadingPlus ? `+${cleaned}` : cleaned;
+  };
+  const handlePhoneKeyDown = (e) => {
+    const key = e.key;
+    const allowedControlKeys = [
+      "Backspace",
+      "Delete",
+      "Tab",
+      "Enter",
+      "Escape",
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+      "Home",
+      "End",
+    ];
+
+    if (allowedControlKeys.includes(key)) return;
+    if ((e.ctrlKey || e.metaKey) && ["a", "c", "v", "x"].includes(key.toLowerCase())) return;
+    if (!/^[0-9().\-\s+]$/.test(key)) {
+      e.preventDefault();
+      return;
+    }
+
+    if (key === "+") {
+      const input = e.currentTarget;
+      const start = input.selectionStart ?? input.value.length;
+      if (start !== 0 || input.value.includes("+")) {
+        e.preventDefault();
+      }
+    }
+  };
+  const handlePhonePaste = (e, field) => {
+    e.preventDefault();
+
+    const pasted = sanitizePhoneInput(e.clipboardData?.getData("text") ?? "");
+    const input = e.currentTarget;
+    const start = input.selectionStart ?? input.value.length;
+    const end = input.selectionEnd ?? input.value.length;
+    const merged = `${input.value.slice(0, start)}${pasted}${input.value.slice(end)}`;
+
+    handleChange(field, sanitizePhoneInput(merged));
+  };
+  const isValidPhone = (phone) => {
+    const normalized = String(phone ?? "").trim();
+    if (!/^\+?[0-9().\-\s]+$/.test(normalized)) return false;
+    const digitsOnly = normalized.replace(/\D/g, "");
+    return digitsOnly.length >= 7 && digitsOnly.length <= 15;
+  };
+  const calculateAgeFromDateOfBirth = (dateOfBirth) => {
+    const raw = String(dateOfBirth ?? "").trim();
+    if (!raw) return null;
+
+    const [yearText = "", monthText = "", dayText = ""] = raw.split("-");
+    const year = Number(yearText);
+    const month = Number(monthText);
+    const day = Number(dayText);
+
+    if (!year || !month || !day) return null;
+
+    const birthDate = new Date(year, month - 1, day);
+    const isValidCalendarDate =
+      birthDate.getFullYear() === year &&
+      birthDate.getMonth() === month - 1 &&
+      birthDate.getDate() === day;
+
+    if (!isValidCalendarDate) return null;
+
+    const today = new Date();
+    let age = today.getFullYear() - year;
+    const hasHadBirthdayThisYear =
+      today.getMonth() > month - 1 ||
+      (today.getMonth() === month - 1 && today.getDate() >= day);
+
+    if (!hasHadBirthdayThisYear) {
+      age -= 1;
+    }
+
+    if (age < 0 || age > 120) return null;
+    return age;
+  };
   const hasValue = (value) => String(value ?? "").trim().length > 0;
+  const currentAgeFromDob = useMemo(
+    () => calculateAgeFromDateOfBirth(formData.dateOfBirth),
+    [formData.dateOfBirth]
+  );
+  const isClaimantMinor = currentAgeFromDob !== null && currentAgeFromDob < 18;
+  const todayIsoDate = useMemo(() => new Date().toISOString().split("T")[0], []);
+
+  const handleDateOfBirthChange = (value) => {
+    const calculatedAge = calculateAgeFromDateOfBirth(value);
+
+    setFormData((prev) => ({
+      ...prev,
+      dateOfBirth: value,
+      currentAge: calculatedAge === null ? "" : String(calculatedAge),
+    }));
+  };
 
   const platformsSummary = useMemo(
     () => (formData.platformsUsed.length ? formData.platformsUsed.join(", ") : "None selected"),
@@ -133,11 +238,34 @@ const SocialMediaClaimForm = () => {
     return { day, month, year };
   }, [formData.signedDate]);
 
-  const handleSubmit = async (e) => {
+  const submitIntake = async () => {
+    try {
+      setIsSending(true);
+
+      await emailjs.sendForm(
+        import.meta.env.VITE_SERVICE_ID6,
+        import.meta.env.VITE_TEMPLATE_ID6,
+        formRef.current,
+        import.meta.env.VITE_USER_ID6
+      );
+
+      alert("Form submitted successfully.");
+      setFormData(buildInitialData());
+    } catch (error) {
+      console.error(error);
+      alert("Failed to submit form. Please try again.");
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     const errors = [];
-    const contactEmailForReview = String(formData.contactEmail ?? "").trim();
+    const contactEmailForReview = String(formData.contactEmail ?? "");
+    const contactPhoneForReview = String(formData.contactPhone ?? "").trim();
+    const claimantAge = calculateAgeFromDateOfBirth(formData.dateOfBirth);
 
     if (!hasValue(formData.clientEntityName)) errors.push("Client entity name is required.");
     if (!hasValue(formData.authorizedRepresentativeNameTitle)) {
@@ -149,7 +277,9 @@ const SocialMediaClaimForm = () => {
     if (!hasValue(contactEmailForReview) || !isValidEmail(contactEmailForReview)) {
       errors.push("Valid contact email is required.");
     }
-    if (!hasValue(formData.contactPhone)) errors.push("Contact phone is required.");
+    if (!hasValue(contactPhoneForReview) || !isValidPhone(contactPhoneForReview)) {
+      errors.push("Valid contact phone is required.");
+    }
     if (!hasValue(formData.counselAddress)) {
       errors.push("Address (Street + Suite if Applicable) is required.");
     }
@@ -157,9 +287,13 @@ const SocialMediaClaimForm = () => {
 
     if (!hasValue(formData.fullName)) errors.push("Name is required.");
     if (!hasValue(formData.dateOfBirth)) errors.push("Date of birth is required.");
-    if (!hasValue(formData.currentAge)) errors.push("Current age is required.");
+    if (hasValue(formData.dateOfBirth) && claimantAge === null) {
+      errors.push("Date of birth is invalid.");
+    }
     if (!hasValue(formData.stateOfResidence)) errors.push("State of residence is required.");
-    if (!hasValue(formData.parentGuardian)) errors.push("Parent/Guardian is required.");
+    if (claimantAge !== null && claimantAge < 18 && !hasValue(formData.parentGuardian)) {
+      errors.push("Parent/Guardian is required for minors.");
+    }
 
     if (formData.platformsUsed.length === 0) errors.push("Select at least one platform.");
     if (!hasValue(formData.ageWhenUseStarted)) errors.push("Age when use started is required.");
@@ -205,32 +339,17 @@ const SocialMediaClaimForm = () => {
       return;
     }
 
-    const confirmEmail = window.confirm(
-      `Please verify this email before submitting intake:\n\n${contactEmailForReview}\n\nClick OK to submit, or Cancel to review.`
-    );
+    setShowEmailVerificationModal(true);
+  };
 
-    if (!confirmEmail) {
+  const handleConfirmEmailAndSubmit = async () => {
+    if (!hasValue(formData.contactEmail) || !isValidEmail(formData.contactEmail)) {
+      alert("Please enter a valid contact email before submitting.");
       return;
     }
 
-    try {
-      setIsSending(true);
-
-      await emailjs.sendForm(
-        import.meta.env.VITE_SERVICE_ID6,
-        import.meta.env.VITE_TEMPLATE_ID6,
-        formRef.current,
-        import.meta.env.VITE_USER_ID6
-      );
-
-      alert("Form submitted successfully.");
-      setFormData(initialData);
-    } catch (error) {
-      console.error(error);
-      alert("Failed to submit form. Please try again.");
-    } finally {
-      setIsSending(false);
-    }
+    setShowEmailVerificationModal(false);
+    await submitIntake();
   };
 
   return (
@@ -338,14 +457,19 @@ const SocialMediaClaimForm = () => {
                     type="tel"
                     name="authorized_contact_phone"
                     value={formData.contactPhone}
-                    onChange={(e) => handleChange("contactPhone", e.target.value)}
+                    onChange={(e) => handleChange("contactPhone", sanitizePhoneInput(e.target.value))}
+                    onKeyDown={handlePhoneKeyDown}
+                    onPaste={(e) => handlePhonePaste(e, "contactPhone")}
+                    inputMode="tel"
+                    pattern="^[+]?[-.() 0-9]{7,25}$"
+                    title="Please enter a valid phone number."
                     required
                   />
                 </label>
               </div>
               <div className="signature-grid-cell">
                 <label>
-                  <span>co-counsel</span>
+                  <span>Co-counsel</span>
                   <input
                     type="text"
                     name="co_counsel"
@@ -407,7 +531,12 @@ const SocialMediaClaimForm = () => {
                 type="tel"
                 name="contact_phone"
                 value={formData.contactPhone}
-                onChange={(e) => handleChange("contactPhone", e.target.value)}
+                onChange={(e) => handleChange("contactPhone", sanitizePhoneInput(e.target.value))}
+                onKeyDown={handlePhoneKeyDown}
+                onPaste={(e) => handlePhonePaste(e, "contactPhone")}
+                inputMode="tel"
+                pattern="^[+]?[-.() 0-9]{7,25}$"
+                title="Please enter a valid phone number."
                 required
               />
             </label>
@@ -435,7 +564,8 @@ const SocialMediaClaimForm = () => {
                   type="date"
                   name="date_of_birth"
                   value={formData.dateOfBirth}
-                  onChange={(e) => handleChange("dateOfBirth", e.target.value)}
+                  onChange={(e) => handleDateOfBirthChange(e.target.value)}
+                  max={todayIsoDate}
                   required
                 />
               </label>
@@ -447,8 +577,7 @@ const SocialMediaClaimForm = () => {
                   min="0"
                   name="current_age"
                   value={formData.currentAge}
-                  onChange={(e) => handleChange("currentAge", e.target.value)}
-                  required
+                  readOnly
                 />
               </label>
             </div>
@@ -472,7 +601,7 @@ const SocialMediaClaimForm = () => {
                   name="parent_guardian"
                   value={formData.parentGuardian}
                   onChange={(e) => handleChange("parentGuardian", e.target.value)}
-                  required
+                  required={isClaimantMinor}
                 />
               </label>
             </div>
@@ -769,6 +898,59 @@ const SocialMediaClaimForm = () => {
             "Submit Intake"
           )}
         </button>
+
+        {showEmailVerificationModal && (
+          <div
+            className="social-email-modal-overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="social-email-modal-title"
+          >
+            <div className="social-email-modal">
+              <h4 id="social-email-modal-title">Verify Contact Email</h4>
+              <p>
+                Confirm this email before sending the intake. You can edit it here and the form
+                will update automatically.
+              </p>
+
+              <label>
+                <span>Contact Email</span>
+                <input
+                  type="email"
+                  value={formData.contactEmail}
+                  onChange={(e) => handleChange("contactEmail", e.target.value)}
+                  autoFocus
+                  required
+                />
+              </label>
+
+              <div className="social-email-modal-actions">
+                <button
+                  type="button"
+                  className="social-email-modal-cancel"
+                  onClick={() => setShowEmailVerificationModal(false)}
+                  disabled={isSending}
+                >
+                  Back to Form
+                </button>
+                <button
+                  type="button"
+                  className="social-email-modal-submit"
+                  onClick={handleConfirmEmailAndSubmit}
+                  disabled={isSending || !isValidEmail(formData.contactEmail)}
+                >
+                  {isSending ? (
+                    <>
+                      <Loader2 className="animate-spin" size={16} /> Sending...
+                    </>
+                  ) : (
+                    "Confirm & Submit"
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </form>
     </div>
   );
